@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Repository for abstracting work with the user database.
+ * Repository for abstracting work with the sUser storage.
  *
  * @author UsoltsevI
  */

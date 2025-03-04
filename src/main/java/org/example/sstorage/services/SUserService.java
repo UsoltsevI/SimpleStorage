@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.sstorage.entities.SRole;
 import org.example.sstorage.entities.SUser;
 import org.example.sstorage.entities.UserSave;
+import org.example.sstorage.repositories.SFileRepository;
 import org.example.sstorage.repositories.SUserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -15,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Service for working with user repository.
+ * Service for working with sUser repository.
  *
  * @author UsoltsevI
  */
@@ -23,6 +24,7 @@ import java.util.Optional;
 @Service
 public class SUserService implements UserDetailsService {
     private final SUserRepository sUserRepository;
+    private final SFileRepository sFileRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -110,6 +112,7 @@ public class SUserService implements UserDetailsService {
      */
     public boolean deleteUserById(Long userId) {
         if (sUserRepository.existsById(userId)) {
+            sFileRepository.deleteByUserId(userId);
             sUserRepository.deleteById(userId);
             return true;
         }
