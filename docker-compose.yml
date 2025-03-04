@@ -1,0 +1,34 @@
+
+services:
+  spostgres:
+    image: postgres
+    container_name: spostgres
+    hostname: spostgres
+    environment:
+      POSTGRES_DB: suserdb
+      POSTGRES_USER: suser
+      POSTGRES_PASSWORD: waterfall
+    volumes:
+      - ./postgresql:/etc/postgresql/
+    networks:
+      - sback
+    ports:
+      - "5432:5432"
+
+  sstorage:
+    container_name: sstorage
+    hostname: sstorage
+    build: .
+    command: "java -jar /root/build/libs/SimpleStorage-1.0.jar"
+    volumes:
+      - ./build:/root/build
+    depends_on:
+      - spostgres
+    networks:
+      - sback
+    ports:
+      - "8085:8080"
+
+networks:
+  sback:
+    driver: bridge

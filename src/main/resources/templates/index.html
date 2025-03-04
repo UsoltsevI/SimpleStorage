@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Home</title>
+    <link rel="stylesheet" href="/css/style.css"> <!-- Link to your CSS file -->
+</head>
+<body>
+<h1>Welcome!</h1>
+
+<div sec:authorize="isAuthenticated()">
+    <p>Welcome, <span sec:authentication="name"></span>!</p>
+    <form action="/logout" method="post">
+        <button type="submit">Logout</button>
+    </form>
+</div>
+
+<div sec:authorize="isAnonymous()">
+    <p>Please <a href="/login">login</a> or <a href="/register">register</a>.</p>
+</div>
+</body>
+</html>
