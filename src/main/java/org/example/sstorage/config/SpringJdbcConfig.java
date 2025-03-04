@@ -7,6 +7,12 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import javax.sql.DataSource;
 
+/**
+ * Class that is responsible for configuring the
+ * database before you start working with it.
+ *
+ * @author UsoltsevI
+ */
 @Configuration
 public class SpringJdbcConfig {
     @Value("${spring.datasource.driver-class-name}")

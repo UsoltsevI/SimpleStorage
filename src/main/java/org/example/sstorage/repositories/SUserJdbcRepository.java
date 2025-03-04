@@ -2,6 +2,7 @@ package org.example.sstorage.repositories;
 
 import org.example.sstorage.entities.SRole;
 import org.example.sstorage.entities.SUser;
+import org.example.sstorage.entities.UserSave;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -11,13 +12,18 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * SUserRepository implementation using Spring JdbcTemplate.
+ *
+ * @author UsoltsevI
+ */
 @Repository
 public class SUserJdbcRepository implements SUserRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @Override
-    public SUser save(SUser user){
+    public SUser save(UserSave userSave){
         Instant now = Instant.now();
 
         String sql = "INSERT INTO users (username, password, role, created_at) " +
@@ -28,18 +34,32 @@ public class SUserJdbcRepository implements SUserRepository {
                     if (rs.next()) {
                         return SUser.builder()
                                 .id(rs.getLong("id"))
-                                .username(user.getUsername())
-                                .password(user.getPassword())
-                                .role(user.getRole())
+                                .username(userSave.getUsername())
+                                .password(userSave.getPassword())
+                                .role(userSave.getRole())
                                 .createdAt(now)
                                 .build();
                     }
                     return null;
                 }
-                , user.getUsername()
-                , user.getPassword()
-                , user.getRole().name()
+                , userSave.getUsername()
+                , userSave.getPassword()
+                , userSave.getRole().name()
                 , Timestamp.from(now));
+    }
+
+    @Override
+    public boolean existsById(Long id) {
+        String sql = "SELECT EXISTS (SELECT 1 FROM users WHERE id = ?)";
+
+        return jdbcTemplate.queryForObject(sql, Boolean.class, id);
+    }
+
+    @Override
+    public boolean existsByUsername(String username) {
+        String sql = "SELECT EXISTS (SELECT 1 FROM users WHERE username = ?";
+
+        return jdbcTemplate.queryForObject(sql, Boolean.class, username);
     }
 
     @Override
@@ -99,12 +119,5 @@ public class SUserJdbcRepository implements SUserRepository {
         String sql = "DELETE FROM users WHERE id = ?";
 
         return jdbcTemplate.update(sql, id) >= 0;
-    }
-
-    @Override
-    public boolean deleteByUsername(String username) {
-        String sql = "DELETE FROM users WHERE username = ?";
-
-        return jdbcTemplate.update(sql, username) >= 0;
     }
 }
