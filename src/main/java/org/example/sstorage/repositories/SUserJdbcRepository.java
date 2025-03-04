@@ -57,7 +57,7 @@ public class SUserJdbcRepository implements SUserRepository {
 
     @Override
     public boolean existsByUsername(String username) {
-        String sql = "SELECT EXISTS (SELECT 1 FROM users WHERE username = ?";
+        String sql = "SELECT EXISTS (SELECT 1 FROM users WHERE username = ?)";
 
         return jdbcTemplate.queryForObject(sql, Boolean.class, username);
     }
@@ -84,7 +84,8 @@ public class SUserJdbcRepository implements SUserRepository {
 
     @Override
     public Optional<SUser> findByUsername(String username) {
-        String sql = "SELECT id, password, role, created_at FROM users " +
+        String sql = "SELECT id, password, role, created_at " +
+                "FROM users " +
                 "WHERE username = ?";
 
         return jdbcTemplate.query(sql, (rs) -> {

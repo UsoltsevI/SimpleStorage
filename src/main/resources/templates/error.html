@@ -2,17 +2,14 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <title>Home</title>
+    <title>Error</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-<h1>Welcome!</h1>
+<h1>An error has occurred!</h1>
 
 <div sec:authorize="isAuthenticated()">
-    <p>Welcome!</p>
-    <form action="/logout" method="post">
-        <button type="submit">Logout</button>
-    </form>
+    <div th:if="${error}" class="error" th:text="${error}"></div>
 </div>
 
 <div sec:authorize="isAnonymous()">

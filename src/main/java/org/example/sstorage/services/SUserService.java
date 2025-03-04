@@ -69,10 +69,10 @@ public class SUserService implements UserDetailsService {
      *
      * @param username username
      * @param password password in its purest form
-     * @return true if success
+     * @return true if success, false  if the username has already been used
      */
     public boolean registerNewUser(String username, String password) {
-        if (sUserRepository.findByUsername(username).isPresent()) {
+        if (sUserRepository.existsByUsername(username)) {
             return false;
         }
         sUserRepository.save(UserSave.builder()
@@ -84,13 +84,32 @@ public class SUserService implements UserDetailsService {
     }
 
     /**
+     * Register admin user.
+     *
+     * @param username admin username
+     * @param password admin password
+     * @return true if successful
+     */
+    public boolean registerAdmin(String username, String password) {
+        if (sUserRepository.existsByUsername(username)) {
+            return false;
+        }
+        sUserRepository.save(UserSave.builder()
+                .username(username)
+                .password(passwordEncoder.encode(password))
+                .role(SRole.ADMIN)
+                .build());
+        return true;
+    }
+
+    /**
      * Delete user by ID.
      *
      * @param userId user ID
      * @return true if success
      */
     public boolean deleteUserById(Long userId) {
-        if (sUserRepository.findById(userId).isPresent()) {
+        if (sUserRepository.existsById(userId)) {
             sUserRepository.deleteById(userId);
             return true;
         }
