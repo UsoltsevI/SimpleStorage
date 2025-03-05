@@ -5,6 +5,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * MinIO configuration class.
+ *
+ * @author UsoltsevI
+ */
 @Configuration
 public class MinIOConfig {
     @Value("${minio.accessKey}")
@@ -19,6 +24,11 @@ public class MinIOConfig {
     @Value("${minio.endpoint}")
     private String endpoint;
 
+    /**
+     * Configure MinioClient.
+     *
+     * @return configured MinioClient
+     */
     @Bean
     public MinioClient minioClient() {
         return MinioClient.builder()
