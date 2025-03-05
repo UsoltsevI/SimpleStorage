@@ -18,8 +18,8 @@ public class MinIOConfig {
     @Value("${minio.secretKey}")
     private String secretKey;
 
-    @Value("${minio.bucket}")
-    private String bucket;
+    @Value("${minio.bucket-name}")
+    private String bucketName;
 
     @Value("${minio.endpoint}")
     private String endpoint;

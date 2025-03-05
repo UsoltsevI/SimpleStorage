@@ -23,8 +23,8 @@ public class MinIOInitializer {
     @Autowired
     private MinioClient minioClient;
 
-    @Value("${minio.bucket}")
-    private String bucket;
+    @Value("${minio.bucket-name}")
+    private String bucketName;
 
     /**
      * Create bucket if not exists.
@@ -32,11 +32,11 @@ public class MinIOInitializer {
     @EventListener
     public void onApplicationEvent(ContextRefreshedEvent event) {
         try {
-            if (minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucket).build())) {
-                minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucket).build());
-                LOGGER.info("Bucket '" + bucket + "' has been created");
+            if (minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build())) {
+                LOGGER.info("Bucket '" + bucketName + "' already exists");
             } else {
-                LOGGER.info("Bucket '" + bucket + "' already exists");
+                minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());
+                LOGGER.info("Bucket '" + bucketName + "' has been created");
             }
         } catch (Exception e) {
             throw new RuntimeException(e);

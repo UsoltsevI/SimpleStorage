@@ -6,23 +6,70 @@
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-<h1>List of all your files</h1>
-<table id="all-files-table">
-    <thead>
-    <tr>
-        <th>Filename</th>
-        <th>Content type</th>
-        <th>File size</th>
-        <th>Created at</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="sfile : ${allFiles}">
-        <td th:text="${sfile.filename}"></td>
-        <td th:text="${sfile.fileType}"></td>
-        <td th:text="${sfile.fileSize}"></td>
-        <td th:text="${sfile.createdAt}"></td>
-    </tr>
-    </tbody>
-</table>
+    <header class="header">
+        <div class="container">
+            <a href="/" class="header_logo" id="header-logo-link">
+                <p>SStorage</p>
+            </a>
+            <div class="nav">
+                <div sec:authorize="isAuthenticated()">
+                    <a th:href="@{/user/{username}/files(username=${#authentication.name})}">
+                        <p>Files</p>
+                    </a>
+                </div>
+                <div>
+                    <a href="https://github.com/UsoltsevI/SimpleStorage">
+                        <p>GitHub</p>
+                    </a>
+                </div>
+                <div sec:authorize="isAnonymous()">
+                    <a href="/login">
+                        <p>Login</p>
+                    </a>
+                </div>
+                <div>
+                    <div sec:authorize="isAuthenticated()">
+                        <span sec:authentication="name"></span>
+                        <a href="/logout">
+                            <p>Logout</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="file-upload">
+        <h3>Upload a File to S3</h3>
+        <form method="POST" th:action="@{/user/{username}/files/upload(username=${#authentication.name})}"
+              enctype="multipart/form-data">
+            <input type="file" name="file"><br><br>
+            <button type="submit">Upload</button>
+        </form>
+    </div>
+    <h1>List of all your files</h1>
+    <table id="all-files-table">
+        <thead>
+        <tr>
+            <th>Filename</th>
+            <th>Content type</th>
+            <th>File size</th>
+            <th>Created at</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="sfile : ${allFiles}">
+            <td th:text="${sfile.filename}"></td>
+            <td th:text="${sfile.fileType}"></td>
+            <td th:text="${sfile.fileSize}"></td>
+            <td th:text="${sfile.createdAt}"></td>
+            <td>
+                <form method="POST" th:action="@{/user/{username}/files/delete(username=${#authentication.name})}">
+                    <input type="hidden" th:name="fileId" th:value="${sfile.id}"/>
+                    <button type="submit">Delete</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 </body>

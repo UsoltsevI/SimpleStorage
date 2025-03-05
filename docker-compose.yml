@@ -19,14 +19,16 @@ services:
     image: minio/minio
     container_name: minio
     hostname: minio
-    command: "minio server /data"
+    command: "minio server /data --console-address :9005"
     environment:
       MINIO_ROOT_USER: root
       MINIO_ROOT_PASSWORD: greentree
+      MINIO_CONSOLE_ADDRESS: ":9005"
     networks:
       - sback
     ports:
       - "9000:9000"
+      - "9005:9005"
 
   sstorage:
     container_name: sstorage

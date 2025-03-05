@@ -21,7 +21,7 @@ public class SFileJdbcRepository implements SFileRepository {
         Instant now = Instant.now();
 
         String sql = "INSERT INTO files (user_id, username, filename, bucket, file_key, file_size, file_type, created_at) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?)" +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?) " +
                 "RETURNING id";
 
         return jdbcTemplate.query(sql, (rs) -> {

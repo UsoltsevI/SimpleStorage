@@ -44,7 +44,7 @@ public class SUserController {
     public String getFiles(@PathVariable String username, Model model) {
         List<SFile> userFiles = sFileService.findAllByUsername(username);
 
-        model.addAttribute("files", userFiles);
+        model.addAttribute("allFiles", userFiles);
 
         return "files";
     }
@@ -72,9 +72,9 @@ public class SUserController {
      * @param model
      * @return redirect page
      */
-    @DeleteMapping("/{username}/files/{fileId}/delete")
+    @PostMapping("/{username}/files/delete")
     @PreAuthorize("#username == authentication.name")
-    public String deleteFile(@PathVariable String username, @PathVariable Long fileId, Model model) {
+    public String deleteFile(@PathVariable String username, @RequestParam("fileId") Long fileId, Model model) {
         Optional<SFile> sFile = sFileService.findById(fileId);
 
         if (sFile.isEmpty()) {
@@ -94,7 +94,7 @@ public class SUserController {
             LOGGER.error("Delete file failure", e);
         }
 
-        return "files";
+        return "redirect:/user/" + username + "/files";
     }
 
     /**

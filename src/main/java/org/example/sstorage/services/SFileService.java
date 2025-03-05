@@ -28,8 +28,8 @@ public class SFileService {
     private final SUserRepository sUserRepository;
     private final MinioClient minioClient;
 
-    @Value("${minio.bucket}")
-    private String bucket;
+    @Value("${minio.bucket-name}")
+    private String bucketName;
 
     /**
      * Find all files.
@@ -120,7 +120,7 @@ public class SFileService {
 
             minioClient.putObject(PutObjectArgs.builder()
                     .contentType(file.getContentType())
-                    .bucket(bucket)
+                    .bucket(bucketName)
                     .object(key)
                     .stream(inputStream, file.getSize(), -1)
                     .build());
@@ -128,9 +128,9 @@ public class SFileService {
             return sFileRepository.save(FileSave.builder()
                     .userId(sUser.getId())
                     .username(sUser.getUsername())
-                    .filename(file.getName())
+                    .filename(file.getOriginalFilename())
                     .fileSize(file.getSize())
-                    .bucket(bucket)
+                    .bucket(bucketName)
                     .key(key)
                     .fileType(file.getContentType())
                     .build());
@@ -148,7 +148,7 @@ public class SFileService {
     public byte[] getFile(SFile sFile) {
         try {
             GetObjectResponse response = minioClient.getObject(GetObjectArgs.builder()
-                    .bucket(bucket)
+                    .bucket(bucketName)
                     .object(sFile.getKey())
                     .build());
             return response.readAllBytes();
@@ -179,7 +179,7 @@ public class SFileService {
     public boolean deleteFile(SFile sFile) {
         try {
             minioClient.removeObject(RemoveObjectArgs.builder()
-                    .bucket(bucket)
+                    .bucket(bucketName)
                     .object(sFile.getKey())
                     .build());
         } catch (Exception e) {
@@ -230,6 +230,6 @@ public class SFileService {
      * @return generated key
      */
     private String generateFileKey(MultipartFile file) {
-        return UUID.randomUUID().toString() + "_" + file.getName();
+        return UUID.randomUUID().toString() + "_" + file.getName().replace(" ", "");
     }
 }
