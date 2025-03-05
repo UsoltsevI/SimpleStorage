@@ -40,7 +40,7 @@ public class SUserController {
      * @return user files view name
      */
     @GetMapping("/{username}/files")
-//    @PreAuthorize("#username == authentication.name")
+    @PreAuthorize("#username == authentication.name")
     public String getFiles(@PathVariable String username, Model model) {
         List<SFile> userFiles = sFileService.findAllByUsername(username);
 
