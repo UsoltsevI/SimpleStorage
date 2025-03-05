@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
@@ -64,43 +66,28 @@ public class SUserJdbcRepository implements SUserRepository {
 
     @Override
     public Optional<SUser> findById(Long id) {
-        String sql = "SELECT username, password, role, created_at FROM users" +
-                "WHERE id = ?";
+        String sql = "SELECT * FROM users WHERE id = ?";
 
         return jdbcTemplate.query(sql, (rs) -> {
-                    if (rs.next()) {
-                        return Optional.of(SUser.builder()
-                                .id(id)
-                                .username(rs.getString("username"))
-                                .password(rs.getString("password"))
-                                .role(SRole.fromString(rs.getString("role")))
-                                .createdAt(rs.getTimestamp("created_at").toInstant())
-                                .build());
-                    }
-                    return Optional.empty();
-                }
-                , id);
+            if (rs.next()) {
+                return Optional.of(extractSUser(rs));
+            }
+            return Optional.empty();
+        }
+        , id);
     }
 
     @Override
     public Optional<SUser> findByUsername(String username) {
-        String sql = "SELECT id, password, role, created_at " +
-                "FROM users " +
-                "WHERE username = ?";
+        String sql = "SELECT * FROM users WHERE username = ?";
 
         return jdbcTemplate.query(sql, (rs) -> {
-                    if (rs.next()) {
-                        return Optional.of(SUser.builder()
-                                .id(rs.getLong("id"))
-                                .username(username)
-                                .password(rs.getString("password"))
-                                .role(SRole.fromString(rs.getString("role")))
-                                .createdAt(rs.getTimestamp("created_at").toInstant())
-                                .build());
-                    }
-                    return Optional.empty();
-                }
-                , username);
+            if (rs.next()) {
+                return Optional.of(extractSUser(rs));
+            }
+            return Optional.empty();
+        }
+        , username);
     }
 
     @Override
@@ -120,5 +107,21 @@ public class SUserJdbcRepository implements SUserRepository {
         String sql = "DELETE FROM users WHERE id = ?";
 
         return jdbcTemplate.update(sql, id) >= 0;
+    }
+
+    /**
+     * Extract SUser from ResultSet with its all fields.
+     *
+     * @param rs ResultSet with all SUser fields
+     * @return according SUser entity
+     */
+    private static SUser extractSUser(ResultSet rs) throws SQLException {
+        return SUser.builder()
+                .id(rs.getLong("id"))
+                .username(rs.getString("username"))
+                .password(rs.getString("password"))
+                .role(SRole.fromString(rs.getString("role")))
+                .createdAt(rs.getTimestamp("created_at").toInstant())
+                .build();
     }
 }

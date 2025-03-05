@@ -32,6 +32,7 @@ public class AdminController {
     @GetMapping("/allusers")
     public String getAllUsers(Model model) {
         model.addAttribute("allUsers", sUserService.getAllUsers());
+
         return "allusers";
     }
 
@@ -43,8 +44,9 @@ public class AdminController {
      */
     @DeleteMapping("/allusers/{userId}")
     public String deleteUser(@PathVariable Long userId) {
-        sFileService.deleteAllByUserId(userId);
+//        Deletes user's files too
         sUserService.deleteUserById(userId);
+
         return "redirect:/admin/allusers";
     }
 
@@ -57,6 +59,7 @@ public class AdminController {
     @GetMapping("/allfiles")
     public String getAllFiles(Model model) {
         model.addAttribute("allFiles", sFileService.getAllFiles());
+
         return "allfiles";
     }
 

@@ -19,8 +19,8 @@ import org.springframework.stereotype.Component;
  * @author UsoltsevI
  */
 @Component
-public class DatabaseInitializer implements ApplicationListener<ContextRefreshedEvent> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseInitializer.class);
+public class SqlDbInitializer implements ApplicationListener<ContextRefreshedEvent> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SqlDbInitializer.class);
     private final JdbcTemplate jdbcTemplate;
     private final Resource schemaScript;
 
@@ -31,7 +31,7 @@ public class DatabaseInitializer implements ApplicationListener<ContextRefreshed
      * @param schemaScript    Resource with SQL script or creating tables
      */
     @Autowired
-    public DatabaseInitializer(JdbcTemplate jdbcTemplate
+    public SqlDbInitializer(JdbcTemplate jdbcTemplate
             , @Value("classpath:schema.sql") Resource schemaScript) {
         this.jdbcTemplate = jdbcTemplate;
         this.schemaScript = schemaScript;

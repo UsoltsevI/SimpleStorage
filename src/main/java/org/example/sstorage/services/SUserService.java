@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.example.sstorage.entities.SRole;
 import org.example.sstorage.entities.SUser;
 import org.example.sstorage.entities.UserSave;
-import org.example.sstorage.repositories.SFileRepository;
 import org.example.sstorage.repositories.SUserRepository;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,8 +23,21 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Service
 public class SUserService implements UserDetailsService {
+
+    /**
+     * SUserRepository to manage user data stored in the database.
+     */
     private final SUserRepository sUserRepository;
-    private final SFileRepository sFileRepository;
+
+    /**
+     * SFileService to manage files.
+     * It is only used to delete files when a user is deleted.
+     */
+    private final SFileService sFileService;
+
+    /**
+     * A password encoder for storing a hash in a database.
+     */
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -113,11 +125,11 @@ public class SUserService implements UserDetailsService {
      * Delete user by ID.
      *
      * @param userId user ID
-     * @return true if success
+     * @return true if success, false if there is not such user
      */
     public boolean deleteUserById(Long userId) {
         if (sUserRepository.existsById(userId)) {
-            sFileRepository.deleteByUserId(userId);
+            sFileService.deleteAllByUserId(userId);
             sUserRepository.deleteById(userId);
             return true;
         }

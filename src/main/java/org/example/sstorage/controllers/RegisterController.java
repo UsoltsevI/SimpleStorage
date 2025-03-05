@@ -43,7 +43,9 @@ public class RegisterController {
         if (sUserService.registerNewUser(username, password)) {
             return "redirect:/login";
         }
+
         model.addAttribute("error", "Username already used");
+
         return "register";
     }
 }

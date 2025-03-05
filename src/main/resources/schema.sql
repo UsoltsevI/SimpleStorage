@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS files (
     filename VARCHAR(63) NOT NULL,
     bucket VARCHAR(31) NOT NULL,
     file_key VARCHAR(63) NOT NULL,
-    file_type VARCHAR(31) NOT NULL,
+    content_type VARCHAR(31) NOT NULL,
     file_size BIGINT,
     created_at TIMESTAMP NOT NULL
 )

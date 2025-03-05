@@ -24,10 +24,28 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Service
 public class SFileService {
+
+    /**
+     * SFileRepository to manage the files in the SQL storage.
+     * Initialized using Spring (RequiredArgsConstructor)
+     */
     private final SFileRepository sFileRepository;
+
+    /**
+     * SUserRepository to get owners info from the user storage.
+     * Initialized using Spring (RequiredArgsConstructor)
+     */
     private final SUserRepository sUserRepository;
+
+    /**
+     * MinioClient to manage the files in the MinIo Storage.
+     * Initialized using Spring (RequiredArgsConstructor)
+     */
     private final MinioClient minioClient;
 
+    /**
+     * The name of the storage bucket in the MinIO storage.
+     */
     @Value("${minio.bucket-name}")
     private String bucketName;
 
@@ -118,6 +136,7 @@ public class SFileService {
 
             String key = generateFileKey(file);
 
+//            Save file to the object storage
             minioClient.putObject(PutObjectArgs.builder()
                     .contentType(file.getContentType())
                     .bucket(bucketName)
@@ -125,6 +144,7 @@ public class SFileService {
                     .stream(inputStream, file.getSize(), -1)
                     .build());
 
+//            Save file metadata to the SQL storage
             return sFileRepository.save(FileSave.builder()
                     .userId(sUser.getId())
                     .username(sUser.getUsername())
@@ -132,7 +152,7 @@ public class SFileService {
                     .fileSize(file.getSize())
                     .bucket(bucketName)
                     .key(key)
-                    .fileType(file.getContentType())
+                    .contentType(file.getContentType())
                     .build());
         } catch (Exception e) {
             throw new RuntimeException(e);

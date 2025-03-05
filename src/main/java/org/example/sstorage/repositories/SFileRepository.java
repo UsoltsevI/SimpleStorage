@@ -66,7 +66,7 @@ public interface SFileRepository {
      * @param userId owner ID
      * @return true if success
      */
-    public boolean deleteByUserId(Long userId);
+    public boolean deleteAllByUserId(Long userId);
 
     /**
      * Delete sFile by owner username.
@@ -74,5 +74,5 @@ public interface SFileRepository {
      * @param username owner username
      * @return true if success
      */
-    public boolean deleteByUsername(String username);
+    public boolean deleteAllByUsername(String username);
 }
