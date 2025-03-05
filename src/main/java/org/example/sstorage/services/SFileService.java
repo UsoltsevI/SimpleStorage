@@ -1,13 +1,18 @@
 package org.example.sstorage.services;
 
+import io.minio.*;
 import lombok.RequiredArgsConstructor;
 import org.example.sstorage.entities.FileSave;
 import org.example.sstorage.entities.SFile;
 import org.example.sstorage.repositories.SFileRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Service for working with sFile repository.
@@ -18,6 +23,10 @@ import java.util.Optional;
 @Service
 public class SFileService {
     private final SFileRepository sFileRepository;
+    private final MinioClient minioClient;
+
+    @Value("${minio.bucket}")
+    private String bucket;
 
     /**
      * Find all files.
@@ -51,11 +60,51 @@ public class SFileService {
     /**
      * Save file record to the database.
      *
-     * @param fileSave sFile data to save
+     * @param file file to save
+     * @param userId owner ID
      * @return resulting sFile
      */
-    public SFile saveFile(FileSave fileSave) {
-        return sFileRepository.save(fileSave);
+    public SFile uploadFile(MultipartFile file, Long userId) {
+        try {
+            InputStream inputStream = file.getInputStream();
+
+            String key = generateFileKey(file);
+
+            minioClient.putObject(PutObjectArgs.builder()
+                    .contentType(file.getContentType())
+                    .bucket(bucket)
+                    .object(key)
+                    .stream(inputStream, file.getSize(), -1)
+                    .build());
+
+            return sFileRepository.save(FileSave.builder()
+                    .userId(userId)
+                    .filename(file.getName())
+                    .bucket(bucket)
+                    .key(key)
+                    .fileType(file.getContentType())
+                    .build());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Get file content.
+     *
+     * @param sFile sFile with content metadata
+     * @return file content as bytes
+     */
+    public byte[] getFile(SFile sFile) {
+        try {
+            GetObjectResponse response = minioClient.getObject(GetObjectArgs.builder()
+                    .bucket(bucket)
+                    .object(sFile.getKey())
+                    .build());
+            return response.readAllBytes();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -65,6 +114,40 @@ public class SFileService {
      * @return true if success
      */
     public boolean deleteFileById(Long id) {
-        return sFileRepository.deleteById(id);
+        Optional<SFile> sFile = sFileRepository.findById(id);
+
+        return sFile.filter(this::deleteFile).isPresent();
+
+    }
+
+    /**
+     * Delete sFile.
+     *
+     * @param sFile sFile to delete
+     * @return true if success
+     */
+    public boolean deleteFile(SFile sFile) {
+        try {
+            minioClient.removeObject(RemoveObjectArgs.builder()
+                    .bucket(bucket)
+                    .object(sFile.getKey())
+                    .build());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        sFileRepository.deleteById(sFile.getId());
+
+        return true;
+    }
+
+    /**
+     * Generate key to store file in object storage.
+     *
+     * @param file file to store
+     * @return generated key
+     */
+    private String generateFileKey(MultipartFile file) {
+        return UUID.randomUUID().toString() + "_" + file.getName();
     }
 }

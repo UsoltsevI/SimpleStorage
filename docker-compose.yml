@@ -15,6 +15,19 @@ services:
     ports:
       - "5432:5432"
 
+  minio:
+    image: minio/minio
+    container_name: minio
+    hostname: minio
+    command: "minio server /data"
+    environment:
+      MINIO_ROOT_USER: root
+      MINIO_ROOT_PASSWORD: greentree
+    networks:
+      - sback
+    ports:
+      - "9000:9000"
+
   sstorage:
     container_name: sstorage
     hostname: sstorage
@@ -24,6 +37,7 @@ services:
       - ./build:/root/build
     depends_on:
       - spostgres
+      - minio
     networks:
       - sback
     ports:

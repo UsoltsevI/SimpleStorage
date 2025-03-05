@@ -16,6 +16,11 @@ public class FileSave {
     private Long userId;
 
     /**
+     * Filename.
+     */
+    private String filename;
+    
+    /**
      * File bucket.
      */
     private String bucket;
@@ -26,7 +31,7 @@ public class FileSave {
     private String key;
 
     /**
-     * File type == file suffix.
+     * File type == file content type.
      */
     private String fileType;
 }

@@ -20,7 +20,7 @@ public class SFileJdbcRepository implements SFileRepository {
     public SFile save(FileSave fileSave) {
         Instant now = Instant.now();
 
-        String sql = "INSERT INTO files (user_id, bucket, file_key, file_type, created_at) " +
+        String sql = "INSERT INTO files (user_id, filename, bucket, file_key, file_type, created_at) " +
                 "VALUES (?, ?, ?, ?, ?)" +
                 "RETURNING id";
 
@@ -29,6 +29,7 @@ public class SFileJdbcRepository implements SFileRepository {
                 return SFile.builder()
                         .id(rs.getLong("id"))
                         .userId(fileSave.getUserId())
+                        .filename(fileSave.getFilename())
                         .bucket(fileSave.getBucket())
                         .key(fileSave.getKey())
                         .fileType(fileSave.getFileType())
@@ -37,15 +38,16 @@ public class SFileJdbcRepository implements SFileRepository {
             }
             return null;
         }, fileSave.getUserId()
-            , fileSave.getBucket()
-            , fileSave.getKey()
-            , fileSave.getFileType()
-            , Timestamp.from(now));
+                , fileSave.getFilename()
+                , fileSave.getBucket()
+                , fileSave.getKey()
+                , fileSave.getFileType()
+                , Timestamp.from(now));
     }
 
     @Override
     public Optional<SFile> findById(Long id) {
-        String sql = "SELECT id, user_id, bucket, file_key, file_type, created_at " +
+        String sql = "SELECT id, user_id, filename, bucket, file_key, file_type, created_at " +
                 "FROM files " +
                 "WHERE id = ?";
 
@@ -53,6 +55,7 @@ public class SFileJdbcRepository implements SFileRepository {
             if (rs.next()) {
                 return Optional.of(SFile.builder()
                         .id(rs.getLong("id"))
+                        .filename(rs.getString("filename"))
                         .userId(rs.getLong("user_id"))
                         .bucket(rs.getString("bucket"))
                         .key(rs.getString("file_key"))
@@ -66,13 +69,14 @@ public class SFileJdbcRepository implements SFileRepository {
 
     @Override
     public List<SFile> findAllByUserId(Long userId) {
-        String sql = "SELECT id, user_id, bucket, file_key, file_type, created_at " +
+        String sql = "SELECT id, user_id, filename, bucket, file_key, file_type, created_at " +
                 "FROM files " +
                 "WHERE id = ?";
 
         return jdbcTemplate.query(sql, (rs, rowNum) -> SFile.builder()
                         .id(rs.getLong("id"))
                         .userId(rs.getLong("user_id"))
+                        .filename(rs.getString("filename"))
                         .bucket(rs.getString("bucket"))
                         .key(rs.getString("file_key"))
                         .fileType(rs.getString("file_type"))
@@ -83,12 +87,13 @@ public class SFileJdbcRepository implements SFileRepository {
 
     @Override
     public List<SFile> findAll() {
-        String sql = "SELECT id, user_id, bucket, file_key, file_type, created_at " +
+        String sql = "SELECT id, user_id, filename, bucket, file_key, file_type, created_at " +
                 "FROM files";
 
         return jdbcTemplate.query(sql, (rs, rowNum) -> SFile.builder()
                         .id(rs.getLong("id"))
                         .userId(rs.getLong("user_id"))
+                        .filename(rs.getString("filename"))
                         .bucket(rs.getString("bucket"))
                         .key(rs.getString("file_key"))
                         .fileType(rs.getString("file_type"))

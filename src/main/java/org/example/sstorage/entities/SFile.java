@@ -19,6 +19,11 @@ public class SFile {
     private Long userId;
 
     /**
+     * Filename
+     */
+    private String filename;
+    
+    /**
      * File bucket in S3.
      */
     private String bucket;
@@ -29,7 +34,7 @@ public class SFile {
     private String key;
 
     /**
-     * File type == file suffix.
+     * File type == file content type.
      */
     private String fileType;
 
