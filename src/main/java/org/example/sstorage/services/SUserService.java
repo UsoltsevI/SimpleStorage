@@ -37,7 +37,7 @@ public class SUserService implements UserDetailsService {
         SUser sUser = userOptional.get();
         return User.withUsername(sUser.getUsername())
                 .password(sUser.getPassword())
-                .roles(sUser.getRole().name())
+                .roles(sUser.getRole().getRoleName())
                 .build();
     }
 
@@ -85,7 +85,7 @@ public class SUserService implements UserDetailsService {
         sUserRepository.save(UserSave.builder()
                 .username(username)
                 .password(passwordEncoder.encode(password))
-                .role(SRole.USER)
+                .role(SRole.ROLE_USER)
                 .build());
         return true;
     }
@@ -104,7 +104,7 @@ public class SUserService implements UserDetailsService {
         sUserRepository.save(UserSave.builder()
                 .username(username)
                 .password(passwordEncoder.encode(password))
-                .role(SRole.ADMIN)
+                .role(SRole.ROLE_ADMIN)
                 .build());
         return true;
     }

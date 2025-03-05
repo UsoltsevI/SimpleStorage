@@ -1,5 +1,6 @@
 package org.example.sstorage.entities;
 
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 
 /**
@@ -8,11 +9,26 @@ import org.springframework.security.core.GrantedAuthority;
  * @author UsoltsevI
  */
 public enum SRole implements GrantedAuthority {
-    ADMIN,
-    USER;
+    ROLE_ADMIN("ADMIN"),
+    ROLE_USER("USER");
+
+    @Getter
+    private String roleName;
+
+    private SRole(String roleName) {
+        this.roleName = roleName;
+    }
+
+    public static SRole fromString(String role) {
+        return switch (role) {
+            case "ADMIN" -> ROLE_ADMIN;
+            case "USER" -> ROLE_USER;
+            default -> throw new RuntimeException("Unrecognized role: '" + role + "'");
+        };
+    }
 
     @Override
     public String getAuthority() {
-        return this.name();
+        return this.roleName;
     }
 }

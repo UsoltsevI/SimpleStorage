@@ -39,4 +39,9 @@ public class FileSave {
      * File type == file content type.
      */
     private String fileType;
+
+    /**
+     * File size.
+     */
+    private Long fileSize;
 }

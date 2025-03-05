@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>All files</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<h1>List of all your files</h1>
+<table id="all-files-table">
+    <thead>
+    <tr>
+        <th>Filename</th>
+        <th>Content type</th>
+        <th>File size</th>
+        <th>Created at</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="sfile : ${allFiles}">
+        <td th:text="${sfile.filename}"></td>
+        <td th:text="${sfile.fileType}"></td>
+        <td th:text="${sfile.fileSize}"></td>
+        <td th:text="${sfile.createdAt}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>

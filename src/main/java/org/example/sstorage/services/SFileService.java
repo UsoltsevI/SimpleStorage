@@ -61,6 +61,15 @@ public class SFileService {
     }
 
     /**
+     * Get all sFiles.
+     *
+     * @return list of all files
+     */
+    public List<SFile> getAllFiles() {
+        return sFileRepository.findAll();
+    }
+
+    /**
      * Find file by ID.
      *
      * @param id file ID
@@ -120,6 +129,7 @@ public class SFileService {
                     .userId(sUser.getId())
                     .username(sUser.getUsername())
                     .filename(file.getName())
+                    .fileSize(file.getSize())
                     .bucket(bucket)
                     .key(key)
                     .fileType(file.getContentType())
@@ -177,6 +187,38 @@ public class SFileService {
         }
 
         sFileRepository.deleteById(sFile.getId());
+
+        return true;
+    }
+
+    /**
+     * Delete all files by owner ID.
+     *
+     * @param userId owner ID.
+     * @return true if success
+     */
+    public boolean deleteAllByUserId(Long userId) {
+        List<SFile> files = sFileRepository.findAllByUserId(userId);
+
+        for (SFile file : files) {
+            deleteFile(file);
+        }
+
+        return true;
+    }
+
+    /**
+     * Delete all files by owner username.
+     *
+     * @param username owner username
+     * @return true if success
+     */
+    private boolean deleteAllByUsername(String username) {
+        List<SFile> files = sFileRepository.findAllByUsername(username);
+
+        for (SFile file : files) {
+            deleteFile(file);
+        }
 
         return true;
     }

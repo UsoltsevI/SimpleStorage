@@ -44,7 +44,7 @@ public class SUserJdbcRepository implements SUserRepository {
                 }
                 , userSave.getUsername()
                 , userSave.getPassword()
-                , userSave.getRole().name()
+                , userSave.getRole().getRoleName()
                 , Timestamp.from(now));
     }
 
@@ -73,7 +73,7 @@ public class SUserJdbcRepository implements SUserRepository {
                                 .id(id)
                                 .username(rs.getString("username"))
                                 .password(rs.getString("password"))
-                                .role(SRole.valueOf(rs.getString("role")))
+                                .role(SRole.fromString(rs.getString("role")))
                                 .createdAt(rs.getTimestamp("created_at").toInstant())
                                 .build());
                     }
@@ -94,7 +94,7 @@ public class SUserJdbcRepository implements SUserRepository {
                                 .id(rs.getLong("id"))
                                 .username(username)
                                 .password(rs.getString("password"))
-                                .role(SRole.valueOf(rs.getString("role")))
+                                .role(SRole.fromString(rs.getString("role")))
                                 .createdAt(rs.getTimestamp("created_at").toInstant())
                                 .build());
                     }
@@ -110,7 +110,7 @@ public class SUserJdbcRepository implements SUserRepository {
         return jdbcTemplate.query(sql, (rs, rowNum) -> SUser.builder()
                 .id(rs.getLong("id"))
                 .username(rs.getString("username"))
-                .role(SRole.valueOf(rs.getString("role")))
+                .role(SRole.fromString(rs.getString("role")))
                 .createdAt(rs.getTimestamp("created_at").toInstant())
                 .build());
     }

@@ -49,10 +49,10 @@ public class SUser implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<SRole> authorities = new ArrayList<>();
         switch (role) {
-            case SRole.ADMIN:
-                authorities.add(SRole.ADMIN);
-            case SRole.USER:
-                authorities.add(SRole.USER);
+            case SRole.ROLE_ADMIN:
+                authorities.add(SRole.ROLE_ADMIN);
+            case SRole.ROLE_USER:
+                authorities.add(SRole.ROLE_USER);
                 break;
             default:
                 throw new RuntimeException("Unrecognized UserRole");

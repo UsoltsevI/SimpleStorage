@@ -44,6 +44,11 @@ public class SFile {
     private String fileType;
 
     /**
+     * File size.
+     */
+    private Long fileSize;
+
+    /**
      * Creation timestamp.
      */
     private Instant createdAt;

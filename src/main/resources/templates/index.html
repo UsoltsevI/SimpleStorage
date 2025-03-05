@@ -13,7 +13,7 @@
             </a>
             <div class="nav">
                 <div sec:authorize="isAuthenticated()">
-                    <a th:href="@{/{username}/files(username=${#authentication.name})}">
+                    <a th:href="@{/user/{username}/files(username=${#authentication.name})}">
                         <p>Files</p>
                     </a>
                 </div>
@@ -71,7 +71,7 @@
             </a>
         </div>
         <div sec:authorize="isAuthenticated()">
-            <a th:href="@{/{username}/files(username=${#authentication.name})}">
+            <a th:href="@{/user/{username}/files(username=${#authentication.name})}">
                 <p>Files</p>
             </a>
         </div>

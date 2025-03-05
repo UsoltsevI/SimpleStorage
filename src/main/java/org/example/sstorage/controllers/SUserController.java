@@ -8,8 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.*;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +23,7 @@ import java.util.Optional;
  * @author UsoltsevI
  */
 @Controller
+@RequestMapping("/user")
 public class SUserController {
     private static final Logger LOGGER  = LoggerFactory.getLogger(SUserController.class);
 
@@ -40,6 +40,7 @@ public class SUserController {
      * @return user files view name
      */
     @GetMapping("/{username}/files")
+//    @PreAuthorize("#username == authentication.name")
     public String getFiles(@PathVariable String username, Model model) {
         List<SFile> userFiles = sFileService.findAllByUsername(username);
 
@@ -51,27 +52,28 @@ public class SUserController {
     /**
      * Upload a new user file.
      *
-     * @param model
-     * @return
+     * @return redirect page
      */
     @PostMapping("/{username}/files/upload")
+    @PreAuthorize("#username == authentication.name")
     public String uploadFile(@RequestParam("file") MultipartFile file, @PathVariable String username, Model model) {
         try {
             SFile sFile = sFileService.uploadFile(file, username);
         } catch (Exception e) {
+            model.addAttribute("error", "Upload file failure");
             LOGGER.error("Failed to upload file", e);
         }
-//        model.addAttribute("files", sFileService.findAllByUsername(username));
-        return "files";
+        return "redirect:/" + username + "/files";
     }
 
     /**
      * Delete user file.
      *
      * @param model
-     * @return
+     * @return redirect page
      */
     @DeleteMapping("/{username}/files/{fileId}/delete")
+    @PreAuthorize("#username == authentication.name")
     public String deleteFile(@PathVariable String username, @PathVariable Long fileId, Model model) {
         Optional<SFile> sFile = sFileService.findById(fileId);
 
@@ -88,6 +90,7 @@ public class SUserController {
         try {
             sFileService.deleteFile(sFile.get());
         } catch (Exception e) {
+            model.addAttribute("error", "Delete file failure");
             LOGGER.error("Delete file failure", e);
         }
 
@@ -100,6 +103,7 @@ public class SUserController {
      * @param fileId sFile ID
      */
     @GetMapping("/{username}/files/{fileId}/download")
+    @PreAuthorize("#username == authentication.name")
     public ResponseEntity<ByteArrayResource> downloadFile(@PathVariable String username
             , @PathVariable Long fileId, Model model) {
         Optional<SFile> sFile = sFileService.findById(fileId);
