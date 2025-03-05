@@ -63,7 +63,7 @@ public class SUserController {
             model.addAttribute("error", "Upload file failure");
             LOGGER.error("Failed to upload file", e);
         }
-        return "redirect:/" + username + "/files";
+        return "redirect:/user/" + username + "/files";
     }
 
     /**

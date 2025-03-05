@@ -5,10 +5,7 @@ import org.example.sstorage.services.SUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * The controller of pages accessible only to the administrator.
@@ -42,9 +39,9 @@ public class AdminController {
      * @param userId user ID
      * @return redirect page
      */
-    @DeleteMapping("/allusers/{userId}")
-    public String deleteUser(@PathVariable Long userId) {
-//        Deletes user's files too
+    @PostMapping("/allusers/delete")
+    public String deleteUser(@RequestParam("userId") Long userId) {
+//        The call of the function Deletes user's files too
         sUserService.deleteUserById(userId);
 
         return "redirect:/admin/allusers";
@@ -69,8 +66,8 @@ public class AdminController {
      * @param fileId sFile ID
      * @return redirect page
      */
-    @DeleteMapping("/allfiles/{fileId}")
-    public String deleteFile(@PathVariable Long fileId) {
+    @PostMapping("/allfiles/delete")
+    public String deleteFile(@RequestParam("fileId") Long fileId) {
         sFileService.deleteFileById(fileId);
 
         return "redirect:/admin/allfiles";

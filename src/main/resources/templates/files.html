@@ -55,14 +55,20 @@
             <th>File size</th>
             <th>Created at</th>
             <th></th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="sfile : ${allFiles}">
             <td th:text="${sfile.filename}"></td>
-            <td th:text="${sfile.fileType}"></td>
+            <td th:text="${sfile.contentType}"></td>
             <td th:text="${sfile.fileSize}"></td>
             <td th:text="${sfile.createdAt}"></td>
+            <td>
+                <form method="GET" th:action="@{/user/{username}/files/{fileId}/download(username=${#authentication.name},fileId=${sfile.id})}">
+                    <button type="submit">Download</button>
+                </form>
+            </td>
             <td>
                 <form method="POST" th:action="@{/user/{username}/files/delete(username=${#authentication.name})}">
                     <input type="hidden" th:name="fileId" th:value="${sfile.id}"/>

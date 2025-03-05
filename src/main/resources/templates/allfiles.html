@@ -6,33 +6,46 @@
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-<h1>List of all files</h1>
-<table id="all-files-table">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Owner ID</th>
-            <th>Owner username</th>
-            <th>Filename</th>
-            <th>Bucket</th>
-            <th>Key</th>
-            <th>Content type</th>
-            <th>File size</th>
-            <th>Created at</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr th:each="sfile : ${allFiles}">
-            <td th:text="${sfile.id}"></td>
-            <td th:text="${sfile.userId}"></td>
-            <td th:text="${sfile.username}"></td>
-            <td th:text="${sfile.filename}"></td>
-            <td th:text="${sfile.bucket}"></td>
-            <td th:text="${sfile.key}"></td>
-            <td th:text="${sfile.fileType}"></td>
-            <td th:text="${sfile.fileSize}"></td>
-            <td th:text="${sfile.createdAt}"></td>
-        </tr>
-    </tbody>
-</table>
+<div sec:authorize="hasRole('ROLE_ADMIN')">
+    <div>
+        <h1>List of all files</h1>
+    </div>
+    <div>
+        <table id="all-files-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Owner ID</th>
+                    <th>Owner username</th>
+                    <th>Filename</th>
+                    <th>Bucket</th>
+                    <th>Key</th>
+                    <th>Content type</th>
+                    <th>File size</th>
+                    <th>Created at</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="sfile : ${allFiles}">
+                    <td th:text="${sfile.id}"></td>
+                    <td th:text="${sfile.userId}"></td>
+                    <td th:text="${sfile.username}"></td>
+                    <td th:text="${sfile.filename}"></td>
+                    <td th:text="${sfile.bucket}"></td>
+                    <td th:text="${sfile.key}"></td>
+                    <td th:text="${sfile.contentType}"></td>
+                    <td th:text="${sfile.fileSize}"></td>
+                    <td th:text="${sfile.createdAt}"></td>
+                    <td>
+                        <form method="POST" th:action="@{/admin/allfiles/delete}">
+                            <input type="hidden" th:name="fileId" th:value="${sfile.id}"/>
+                            <button type="submit">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
 </body>

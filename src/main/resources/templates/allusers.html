@@ -6,23 +6,36 @@
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-<h1>List of all users</h1>
-<table id="all-users-table">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Username</th>
-            <th>Role</th>
-            <th>Created At</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr th:each="suser : ${allUsers}">
-            <td th:text="${suser.id}"></td>
-            <td th:text="${suser.username}"></td>
-            <td th:text="${suser.role}"></td>
-            <td th:text="${suser.createdAt}"></td>
-        </tr>
-    </tbody>
-</table>
+<div sec:authorize="hasRole('ROLE_ADMIN')">
+    <div>
+        <h1>List of all users</h1>
+    </div>
+    <div>
+        <table id="all-users-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Role</th>
+                    <th>Created At</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="suser : ${allUsers}">
+                    <td th:text="${suser.id}"></td>
+                    <td th:text="${suser.username}"></td>
+                    <td th:text="${suser.role}"></td>
+                    <td th:text="${suser.createdAt}"></td>
+                    <td>
+                        <form method="POST" th:action="@{/admin/allusers/delete}">
+                            <input type="hidden" th:name="userId" th:value="${suser.id}"/>
+                            <button type="submit">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
 </body>
