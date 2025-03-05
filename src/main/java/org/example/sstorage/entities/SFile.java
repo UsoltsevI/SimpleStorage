@@ -19,6 +19,11 @@ public class SFile {
     private Long userId;
 
     /**
+     * Owner username.
+     */
+    private String username;
+
+    /**
      * Filename
      */
     private String filename;

@@ -2,21 +2,79 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <title>Home</title>
+    <title>SStorage</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
-<body>
-<h1>Welcome!</h1>
-
-<div sec:authorize="isAuthenticated()">
-    <p>Welcome!</p>
-    <form action="/logout" method="post">
-        <button type="submit">Logout</button>
-    </form>
-</div>
-
-<div sec:authorize="isAnonymous()">
-    <p>Please <a href="/login">login</a> or <a href="/register">register</a>.</p>
-</div>
+<body data-page="index">
+    <header class="header">
+        <div class="container">
+            <a href="/" class="header_logo" id="header-logo-link">
+                <p>SStorage</p>
+            </a>
+            <div class="nav">
+                <div sec:authorize="isAuthenticated()">
+                    <a th:href="@{/{username}/files(username=${#authentication.name})}">
+                        <p>Files</p>
+                    </a>
+                </div>
+                <div>
+                    <a href="https://github.com/UsoltsevI/SimpleStorage">
+                        <p>GitHub</p>
+                    </a>
+                </div>
+                <div sec:authorize="isAnonymous()">
+                    <a href="/login">
+                        <p>Login</p>
+                    </a>
+                </div>
+                <div>
+                    <div sec:authorize="isAuthenticated()">
+                        <span sec:authentication="name"></span>
+                        <a href="/logout">
+                            <p>Logout</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="brief">
+        <h1>SStorage</h1>
+        <p>An open source platform for secure remote storage of various files.</p>
+    </div>
+    <div class="opportunities">
+        <h2>Opportunities</h2>
+        <p>Storing files on a server with pre-registration.</p>
+    </div>
+    <div class="get_started">
+        <h2>Get started</h2>
+        <div>
+            <a href="/register">
+                <p>Registration</p>
+            </a>
+        </div>
+    </div>
+    <footer class="footer">
+        <div>
+            <a href="/about">
+                <p>About</p>
+            </a>
+        </div>
+        <div>
+            <a href="/login">
+                <p>Login</p>
+            </a>
+        </div>
+        <div>
+            <a href="/register">
+                <p>Registeration</p>
+            </a>
+        </div>
+        <div sec:authorize="isAuthenticated()">
+            <a th:href="@{/{username}/files(username=${#authentication.name})}">
+                <p>Files</p>
+            </a>
+        </div>
+    </footer>
 </body>
 </html>

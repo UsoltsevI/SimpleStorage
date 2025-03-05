@@ -6,6 +6,7 @@ import org.example.sstorage.entities.SUser;
 import org.example.sstorage.entities.UserSave;
 import org.example.sstorage.repositories.SFileRepository;
 import org.example.sstorage.repositories.SUserRepository;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -33,7 +34,11 @@ public class SUserService implements UserDetailsService {
         if (userOptional.isEmpty()) {
             throw new UsernameNotFoundException(username);
         }
-        return userOptional.get();
+        SUser sUser = userOptional.get();
+        return User.withUsername(sUser.getUsername())
+                .password(sUser.getPassword())
+                .roles(sUser.getRole().name())
+                .build();
     }
 
     /**

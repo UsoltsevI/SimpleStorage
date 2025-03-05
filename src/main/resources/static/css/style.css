@@ -52,3 +52,7 @@ a {
 a:hover {
     text-decoration: underline;
 }
+
+nav {
+    display: inline-block;
+}

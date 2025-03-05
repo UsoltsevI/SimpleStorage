@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -37,9 +39,9 @@ public class SUserController {
      * @param model model for adding a list of files
      * @return user files view name
      */
-    @GetMapping("/{userId}/files")
-    public String getFiles(@PathVariable Long userId, Model model) {
-        List<SFile> userFiles = sFileService.findAllByUserId(userId);
+    @GetMapping("/{username}/files")
+    public String getFiles(@PathVariable String username, Model model) {
+        List<SFile> userFiles = sFileService.findAllByUsername(username);
 
         model.addAttribute("files", userFiles);
 
@@ -52,14 +54,14 @@ public class SUserController {
      * @param model
      * @return
      */
-    @PostMapping("/{userId}/files/upload")
-    public String uploadFile(@RequestParam("file") MultipartFile file, @PathVariable Long userId, Model model) {
+    @PostMapping("/{username}/files/upload")
+    public String uploadFile(@RequestParam("file") MultipartFile file, @PathVariable String username, Model model) {
         try {
-            SFile sFile = sFileService.uploadFile(file, userId);
+            SFile sFile = sFileService.uploadFile(file, username);
         } catch (Exception e) {
             LOGGER.error("Failed to upload file", e);
         }
-        model.addAttribute("files", sFileService.findAllByUserId(userId));
+//        model.addAttribute("files", sFileService.findAllByUsername(username));
         return "files";
     }
 
@@ -69,12 +71,17 @@ public class SUserController {
      * @param model
      * @return
      */
-    @DeleteMapping("/files/{fileId}/delete")
-    public String deleteFile(@PathVariable Long fileId, Model model) {
+    @DeleteMapping("/{username}/files/{fileId}/delete")
+    public String deleteFile(@PathVariable String username, @PathVariable Long fileId, Model model) {
         Optional<SFile> sFile = sFileService.findById(fileId);
 
         if (sFile.isEmpty()) {
             model.addAttribute("error", "No such file");
+            return "files";
+        }
+
+        if (!sFile.get().getUsername().equals(username)) {
+            model.addAttribute("error", "Permission denied");
             return "files";
         }
 
@@ -92,13 +99,19 @@ public class SUserController {
      *
      * @param fileId sFile ID
      */
-    @GetMapping("/files/{fileId}/download")
-    public ResponseEntity<ByteArrayResource> downloadFile(@PathVariable Long fileId, Model model) {
+    @GetMapping("/{username}/files/{fileId}/download")
+    public ResponseEntity<ByteArrayResource> downloadFile(@PathVariable String username
+            , @PathVariable Long fileId, Model model) {
         Optional<SFile> sFile = sFileService.findById(fileId);
 
         if (sFile.isEmpty()) {
             model.addAttribute("error", "No such file");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        if (!sFile.get().getUsername().equals(username)) {
+            model.addAttribute("error", "Permission denied");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
         try {

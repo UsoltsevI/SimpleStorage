@@ -4,7 +4,9 @@ import io.minio.*;
 import lombok.RequiredArgsConstructor;
 import org.example.sstorage.entities.FileSave;
 import org.example.sstorage.entities.SFile;
+import org.example.sstorage.entities.SUser;
 import org.example.sstorage.repositories.SFileRepository;
+import org.example.sstorage.repositories.SUserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,6 +25,7 @@ import java.util.UUID;
 @Service
 public class SFileService {
     private final SFileRepository sFileRepository;
+    private final SUserRepository sUserRepository;
     private final MinioClient minioClient;
 
     @Value("${minio.bucket}")
@@ -48,6 +51,16 @@ public class SFileService {
     }
 
     /**
+     * Find all files belonging to the user by owner username.
+     *
+     * @param username owner username
+     * @return list of user files
+     */
+    public List<SFile> findAllByUsername(String username) {
+        return sFileRepository.findAllByUsername(username);
+    }
+
+    /**
      * Find file by ID.
      *
      * @param id file ID
@@ -58,13 +71,39 @@ public class SFileService {
     }
 
     /**
-     * Save file record to the database.
+     * Save file to the database.
      *
      * @param file file to save
      * @param userId owner ID
      * @return resulting sFile
      */
     public SFile uploadFile(MultipartFile file, Long userId) {
+        Optional<SUser> userOptional = sUserRepository.findById(userId);
+
+        return userOptional.map(sUser -> uploadFile(file, sUser)).orElse(null);
+    }
+
+    /**
+     * Save file to the database.
+     *
+     * @param file file to save
+     * @param username owner username
+     * @return resulting sFile
+     */
+    public SFile uploadFile(MultipartFile file, String username) {
+        Optional<SUser> userOptional = sUserRepository.findByUsername(username);
+
+        return userOptional.map(sUser -> uploadFile(file, sUser)).orElse(null);
+    }
+
+    /**
+     * Save file to the database.
+     *
+     * @param file file to save
+     * @param sUser owner
+     * @return resulting sFile
+     */
+    public SFile uploadFile(MultipartFile file, SUser sUser) {
         try {
             InputStream inputStream = file.getInputStream();
 
@@ -78,7 +117,8 @@ public class SFileService {
                     .build());
 
             return sFileRepository.save(FileSave.builder()
-                    .userId(userId)
+                    .userId(sUser.getId())
+                    .username(sUser.getUsername())
                     .filename(file.getName())
                     .bucket(bucket)
                     .key(key)

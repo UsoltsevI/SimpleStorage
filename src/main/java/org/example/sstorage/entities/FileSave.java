@@ -16,6 +16,11 @@ public class FileSave {
     private Long userId;
 
     /**
+     * Owner username.
+     */
+    private String username;
+
+    /**
      * Filename.
      */
     private String filename;

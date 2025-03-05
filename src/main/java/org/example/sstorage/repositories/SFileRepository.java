@@ -38,6 +38,14 @@ public interface SFileRepository {
     public List<SFile> findAllByUserId(Long userId);
 
     /**
+     * Find all files belonging to the user by owner username.
+     *
+     * @param username owner username
+     * @return list of user files
+     */
+    public List<SFile> findAllByUsername(String username);
+
+    /**
      * Find all files.
      *
      * @return list of all files
@@ -60,4 +68,11 @@ public interface SFileRepository {
      */
     public boolean deleteByUserId(Long userId);
 
+    /**
+     * Delete sFile by owner username.
+     *
+     * @param username owner username
+     * @return true if success
+     */
+    public boolean deleteByUsername(String username);
 }
