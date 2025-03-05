@@ -6,7 +6,7 @@ A simple monolithic open source web application
 that allows registered
 users to store their files on a server.
 
-# Description of the technologies used
+## Description of the technologies used
 
 - [Spring Framework](https://spring.io/)
 

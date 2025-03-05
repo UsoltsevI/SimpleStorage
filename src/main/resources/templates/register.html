@@ -2,26 +2,133 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <title>Registration</title>
-  <link rel="stylesheet" href="/css/style.css"> <!-- Link to your CSS file -->
+  <link rel="stylesheet" href="/css/style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="apple-touch-icon" href="/img/apple-icon.png">
+  <!-- Load Require CSS -->
+  <link href="/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+  <!-- Font CSS -->
+  <link href="/css/boxicon.min.css" rel="stylesheet">
+  <!-- Load Tempalte CSS -->
+  <link rel="stylesheet" href="/css/templatemo.css">
 </head>
 <body>
-<h1>Registration</h1>
-<div th:if="${error}" class="error" th:text="${error}"></div>
-<form th:action="@{/register}" method="post">
-  <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-  <div>
-    <label for="username">Username:</label>
-    <input type="text" id="username" name="username" required>
+<!-- Header -->
+<nav id="main_nav" class="navbar navbar-expand-lg navbar-light bg-white shadow">
+  <div class="container d-flex justify-content-between align-items-center">
+    <a class="navbar-brand h1" href="/">
+      <span class="text-dark h4">S</span> <span class="text-primary h4">Storage</span>
+    </a>
+    <div class="align-self-center collapse navbar-collapse flex-fill  d-lg-flex justify-content-lg-between" id="navbar-toggler-success">
+      <div class="flex-fill mx-xl-5 mb-2">
+        <ul class="nav navbar-nav d-flex justify-content-between mx-xl-5 text-center text-dark">
+          <li class="nav-item">
+            <a href="/" class="nav-link btn-outline-primary rounded-pill px-3">Home</a>
+          </li>
+          <li class="nav-item" sec:authorize="isAuthenticated()">
+            <a th:href="@{/user/{username}/files(username=${#authentication.name})}"
+               class="nav-link btn-outline-primary rounded-pill px-3">Files</a>
+          </li>
+          <li class="nav-item">
+            <a href="https://github.com/UsoltsevI/SimpleStorage"
+               class="nav-link btn-outline-primary rounded-pill px-3">GitHub</a>
+          </li>
+          <li sec:authorize="isAnonymous()">
+            <a href="/login" class="nav-link btn-outline-primary rounded-pill px-3">Login</a>
+          </li>
+          <li sec:authorize="isAuthenticated()">
+            <a href="/logout" class="nav-link btn-outline-primary rounded-pill px-3">Logout</a>
+          </li>
+        </ul>
+      </div>
+      <div class="navbar align-self-center d-flex">
+        <a class="nav-link" href="#"><i class='bx bx-bell bx-sm bx-tada-hover text-primary'></i></a>
+        <a class="nav-link" href="#"><i class='bx bx-cog bx-sm text-primary'></i></a>
+        <a class="nav-link" href="#"><i class='bx bx-user-circle bx-sm text-primary'></i></a>
+      </div>
+    </div>
   </div>
-  <div>
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password" required>
+</nav>
+<!-- Close Header -->
+
+<div class="container">
+  <div class="register_form">
+    <h1>Registration</h1>
+    <div th:if="${error}" class="error" th:text="${error}"></div>
+    <form th:action="@{/register}" method="post">
+      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+      <div>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+      </div>
+      <div>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+      </div>
+      <div>
+        <button type="submit">Register</button>
+      </div>
+    </form>
+    <p>Already have an account? <a href="/login">Login</a></p>
   </div>
-  <div>
-    <button type="submit">Register</button>
+</div>
+
+<!-- Start Footer -->
+<footer class="bg-secondary pt-4">
+  <div class="container">
+    <div class="row py-4">
+      <div class="col-lg-3 col-12 align-left">
+        <a class="navbar-brand" href="/">
+          <i class='bx bx-buildings bx-sm text-light'></i>
+          <span class="text-light h5">S</span> <span class="text-light h5 semi-bold-600">Storage</span>
+        </a>
+        <p class="text-light my-lg-4 my-2">
+          I'm about to start using SStorage!
+        </p>
+      </div>
+      <div class="col-lg-3 col-md-4 my-sm-0 mt-4">
+        <h3 class="h4 pb-lg-3 text-light light-300">Navigation</h3>
+        <ul class="list-unstyled text-light light-300">
+          <li class="pb-2">
+            <a class="text-decoration-none text-light" href="/">Home</a>
+          </li>
+          <li class="pb-2">
+            <a class="text-decoration-none text-light"
+               th:href="@{/user/{username}/files(username=${#authentication.name})}">Files</a>
+          </li>
+          <li class="pb-2">
+            <a class="text-decoration-none text-light"
+               href="https://github.com/UsoltsevI/SimpleStorage">GitHub</a>
+          </li>
+          <li class="pb-2">
+            <a class="text-decoration-none text-light" href="/login">Longin</a>
+          </li>
+          <li class="pb-2">
+            <a class="text-decoration-none text-light" href="/register">Registration</a>
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
-</form>
-<p>Already have an account? <a href="/login">Login</a></p>
-<a href="/">Home page</a>
+
+  <div class="w-100 bg-primary py-3">
+    <div class="container">
+      <div class="row pt-2">
+        <div class="col-lg-6 col-sm-12">
+          <p class="text-lg-start text-center text-light light-300">
+            © Copyright 2021 Purple Buzz Company. All Rights Reserved.
+          </p>
+        </div>
+        <div class="col-lg-6 col-sm-12">
+          <p class="text-lg-end text-center text-light light-300">
+            Designed by <a rel="sponsored" class="text-decoration-none text-light" href="https://templatemo.com/" target="_blank"><strong>TemplateMo</strong></a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
 </body>
 </html>

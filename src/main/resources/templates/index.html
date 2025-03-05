@@ -3,77 +3,190 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <title>SStorage</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="apple-touch-icon" href="img/apple-icon.png">
+    <!-- Load Require CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Font CSS -->
+    <link href="css/boxicon.min.css" rel="stylesheet">
+    <!-- Load Tempalte CSS -->
+    <link rel="stylesheet" href="css/templatemo.css">
+<!--
+
+TemplateMo 561 Purple Buzz
+
+https://templatemo.com/tm-561-purple-buzz
+
+-->
 </head>
-<body data-page="index">
-    <header class="header">
-        <div class="container">
-            <a href="/" class="header_logo" id="header-logo-link">
-                <p>SStorage</p>
+<body>
+    <!-- Header -->
+    <nav id="main_nav" class="navbar navbar-expand-lg navbar-light bg-white shadow">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a class="navbar-brand h1" href="/">
+                <span class="text-dark h4">S</span> <span class="text-primary h4">Storage</span>
             </a>
-            <div class="nav">
-                <div sec:authorize="isAuthenticated()">
-                    <a th:href="@{/user/{username}/files(username=${#authentication.name})}">
-                        <p>Files</p>
-                    </a>
+            <div class="align-self-center collapse navbar-collapse flex-fill  d-lg-flex justify-content-lg-between" id="navbar-toggler-success">
+                <div class="flex-fill mx-xl-5 mb-2">
+                    <ul class="nav navbar-nav d-flex justify-content-between mx-xl-5 text-center text-dark">
+                        <li class="nav-item">
+                            <a href="/" class="nav-link btn-outline-primary rounded-pill px-3">Home</a>
+                        </li>
+                        <li class="nav-item" sec:authorize="isAuthenticated()">
+                            <a th:href="@{/user/{username}/files(username=${#authentication.name})}"
+                               class="nav-link btn-outline-primary rounded-pill px-3">Files</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="https://github.com/UsoltsevI/SimpleStorage"
+                               class="nav-link btn-outline-primary rounded-pill px-3">GitHub</a>
+                        </li>
+                        <li sec:authorize="isAnonymous()">
+                            <a href="/login" class="nav-link btn-outline-primary rounded-pill px-3">Login</a>
+                        </li>
+                        <li sec:authorize="isAuthenticated()">
+                            <a href="/logout" class="nav-link btn-outline-primary rounded-pill px-3">Logout</a>
+                        </li>
+                    </ul>
                 </div>
-                <div>
-                    <a href="https://github.com/UsoltsevI/SimpleStorage">
-                        <p>GitHub</p>
-                    </a>
-                </div>
-                <div sec:authorize="isAnonymous()">
-                    <a href="/login">
-                        <p>Login</p>
-                    </a>
-                </div>
-                <div>
-                    <div sec:authorize="isAuthenticated()">
-                        <span sec:authentication="name"></span>
-                        <a href="/logout">
-                            <p>Logout</p>
-                        </a>
-                    </div>
+                <div class="navbar align-self-center d-flex">
+                    <a class="nav-link" href="#"><i class='bx bx-bell bx-sm bx-tada-hover text-primary'></i></a>
+                    <a class="nav-link" href="#"><i class='bx bx-cog bx-sm text-primary'></i></a>
+                    <a class="nav-link" href="#"><i class='bx bx-user-circle bx-sm text-primary'></i></a>
                 </div>
             </div>
         </div>
-    </header>
-    <div class="brief">
-        <h1>SStorage</h1>
-        <p>An open source platform for secure remote storage of various files.</p>
-    </div>
-    <div class="opportunities">
-        <h2>Opportunities</h2>
-        <p>Storing files on a server with pre-registration.</p>
-    </div>
-    <div class="get_started">
-        <h2>Get started</h2>
-        <div>
-            <a href="/register">
-                <p>Registration</p>
-            </a>
+    </nav>
+    <!-- Close Header -->
+
+    <!-- Start Service -->
+    <section class="service-wrapper py-3">
+        <div class="container-fluid pb-3">
+            <div class="row">
+                <h2 class="h2 text-center col-12 py-5 semi-bold-600">Overview</h2>
+                <div class="service-heading col-10 col-lg-9 text-start float-end light-300">
+                    <h2 class="h3 pb-4 typo-space-line">Make Success for future</h2>
+                </div>
+            </div>
+            <p class="service-footer col-10 offset-2 col-lg-9 offset-lg-3 text-start pb-3 text-muted px-2">
+                Take care of the safety of your files. Use SStorage to store them!
+            </p>
         </div>
-    </div>
-    <footer class="footer">
-        <div>
-            <a href="/about">
-                <p>About</p>
-            </a>
+    </section>
+
+    <section class="container overflow-hidden py-5">
+        <div class="row gx-5 gx-sm-3 gx-lg-5 gy-lg-5 gy-3 pb-3 projects">
+
+            <!-- Start Recent Work -->
+            <div class="col-xl-3 col-md-4 col-sm-6 project ui branding">
+                <a href="/register" class="service-work card border-0 text-white shadow-sm overflow-hidden mx-5 m-sm-0">
+                    <img class="service card-img" src="img/services-01.jpg" alt="Card image">
+                    <div class="service-work-vertical card-img-overlay d-flex align-items-end">
+                        <div class="service-work-content text-left text-light">
+                            <span class="btn btn-outline-light rounded-pill mb-lg-3 px-lg-4 light-300">CSV</span>
+                            <p class="card-text">You love tables! Keep your favorites with us!</p>
+                        </div>
+                    </div>
+                </a>
+            </div><!-- End Recent Work -->
+
+            <!-- Start Recent Work -->
+            <div class="col-xl-3 col-md-4 col-sm-6 project ui graphic">
+                <a href="/register" class="service-work card border-0 text-white shadow-sm overflow-hidden mx-5 m-sm-0">
+                    <img class="card-img" src="img/services-02.jpg" alt="Card image">
+                    <div class="service-work-vertical card-img-overlay d-flex align-items-end">
+                        <div class="service-work-content text-left text-light">
+                            <span class="btn btn-outline-light rounded-pill mb-lg-3 px-lg-4 light-300">Media</span>
+                            <p class="card-text">Do you like taking pictures, making videos, or recording music?</p>
+                        </div>
+                    </div>
+                </a>
+            </div><!-- End Recent Work -->
+
+            <!-- Start Recent Work -->
+            <div class="col-xl-3 col-md-4 col-sm-6 project branding">
+                <a href="/register" class="service-work card border-0 text-white shadow-sm overflow-hidden mx-5 m-sm-0">
+                    <img class="card-img" src="img/services-03.jpg" alt="Card image">
+                    <div class="service-work-vertical card-img-overlay d-flex align-items-end">
+                        <div class="service-work-content text-left text-light">
+                            <span class="btn btn-outline-light rounded-pill mb-lg-3 px-lg-4 light-300">Text</span>
+                            <p class="card-text">Or maybe you're a writer?</p>
+                        </div>
+                    </div>
+                </a>
+            </div><!-- End Recent Work -->
+
+            <!-- Start Recent Work -->
+            <div class="col-xl-3 col-md-4 col-sm-6 project ui graphic">
+                <a href="/register" class="service-work card border-0 text-white shadow-sm overflow-hidden mx-5 m-sm-0">
+                    <img class="card-img" src="/img/services-04.jpg" alt="Card image">
+                    <div class="service-work-vertical card-img-overlay d-flex align-items-end">
+                        <div class="service-work-content text-left text-light">
+                            <span class="btn btn-outline-light rounded-pill mb-lg-3 px-lg-4 light-300">Clown?</span>
+                            <p class="card-text">Even so!</p>
+                        </div>
+                    </div>
+                </a>
+            </div><!-- End Recent Work -->
+
         </div>
-        <div>
-            <a href="/login">
-                <p>Login</p>
-            </a>
+    </section>
+    <!-- End Service -->
+
+    <!-- Start Footer -->
+    <footer class="bg-secondary pt-4">
+        <div class="container">
+            <div class="row py-4">
+                <div class="col-lg-3 col-12 align-left">
+                    <a class="navbar-brand" href="/">
+                        <i class='bx bx-buildings bx-sm text-light'></i>
+                        <span class="text-light h5">S</span> <span class="text-light h5 semi-bold-600">Storage</span>
+                    </a>
+                    <p class="text-light my-lg-4 my-2">
+                        I'm about to start using SStorage!
+                    </p>
+                </div>
+                <div class="col-lg-3 col-md-4 my-sm-0 mt-4">
+                    <h3 class="h4 pb-lg-3 text-light light-300">Navigation</h3>
+                        <ul class="list-unstyled text-light light-300">
+                            <li class="pb-2">
+                                <a class="text-decoration-none text-light" href="/">Home</a>
+                            </li>
+                            <li class="pb-2">
+                                <a class="text-decoration-none text-light"
+                                   th:href="@{/user/{username}/files(username=${#authentication.name})}">Files</a>
+                            </li>
+                            <li class="pb-2">
+                                <a class="text-decoration-none text-light"
+                                   href="https://github.com/UsoltsevI/SimpleStorage">GitHub</a>
+                            </li>
+                            <li class="pb-2">
+                                <a class="text-decoration-none text-light" href="/login">Longin</a>
+                            </li>
+                            <li class="pb-2">
+                                <a class="text-decoration-none text-light" href="/register">Registration</a>
+                            </li>
+                        </ul>
+                </div>
+            </div>
         </div>
-        <div>
-            <a href="/register">
-                <p>Registeration</p>
-            </a>
-        </div>
-        <div sec:authorize="isAuthenticated()">
-            <a th:href="@{/user/{username}/files(username=${#authentication.name})}">
-                <p>Files</p>
-            </a>
+
+        <div class="w-100 bg-primary py-3">
+            <div class="container">
+                <div class="row pt-2">
+                    <div class="col-lg-6 col-sm-12">
+                        <p class="text-lg-start text-center text-light light-300">
+                            © Copyright 2021 Purple Buzz Company. All Rights Reserved.
+                        </p>
+                    </div>
+                    <div class="col-lg-6 col-sm-12">
+                        <p class="text-lg-end text-center text-light light-300">
+                            Designed by <a rel="sponsored" class="text-decoration-none text-light" href="https://templatemo.com/" target="_blank"><strong>TemplateMo</strong></a>
+                        </p>
+                    </div>
+                </div>
+            </div>
         </div>
     </footer>
 </body>
