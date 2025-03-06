@@ -6,6 +6,8 @@ A simple monolithic open source web application
 that allows registered
 users to store their files on a server.
 
+The frontend is taken from the template site: https://templatemo.com/live/templatemo_561_purple_buzz
+
 ## Description of the technologies used
 
 - [Spring Framework](https://spring.io/)
