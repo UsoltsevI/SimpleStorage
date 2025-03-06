@@ -1,8 +1,10 @@
 package org.example.sstorage.controllers;
 
 import org.springframework.dao.DataAccessException;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.sql.SQLException;
 
@@ -11,7 +13,7 @@ import java.sql.SQLException;
  *
  * @author UsoltsevI
  */
-@Controller
+@ControllerAdvice
 public class ExceptionController {
 
     /**
@@ -25,5 +27,20 @@ public class ExceptionController {
         // to the model) but see "Extending ExceptionHandlerExceptionResolver"
         // below.
         return "databaseError";
+    }
+
+    /**
+     * Handle with MaxUploadSizeExceededException.
+     *
+     * @param exc exception
+     * @return error model
+     */
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ModelAndView handleMaxSizeException(MaxUploadSizeExceededException exc) {
+
+        ModelAndView modelAndView = new ModelAndView("error");
+        modelAndView.getModel().put("error", "File size exceeds the limit!");
+
+        return modelAndView;
     }
 }
