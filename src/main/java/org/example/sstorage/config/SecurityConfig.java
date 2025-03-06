@@ -30,8 +30,8 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/admin/**").hasRole("ROLE_ADMIN")
-                        .requestMatchers("/files/**", "/user/**", "/error").hasRole("ROLE_USER")
-                        .requestMatchers("/register", "/css/**", "/js/**", "/", "/img/**").permitAll()
+                        .requestMatchers("/user/**", "/error").hasAnyRole("ROLE_USER", "ROLE_ADMIN")
+                        .requestMatchers("/register", "/css/**", "/js/**", "/", "/img/**", "/fonts/**").permitAll()
                         .anyRequest().authenticated())
                 .formLogin((form) -> form
                         .loginPage("/login")
