@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS files (
     id BIGSERIAL PRIMARY KEY,
     user_id BIGINT NOT NULL,
     username VARCHAR(31) NOT NULL,
-    filename VARCHAR(63) NOT NULL,
+    filename VARCHAR(254) NOT NULL,
     bucket VARCHAR(31) NOT NULL,
     file_key VARCHAR(63) NOT NULL,
     content_type VARCHAR(31) NOT NULL,
