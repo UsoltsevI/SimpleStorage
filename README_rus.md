@@ -8,6 +8,10 @@
 
 Фронтенд взят с сайта шаблонов: https://templatemo.com/live/templatemo_561_purple_buzz
 
+## Пояснительная записка
+
+См ABOUT.md
+
 ## Описание используемых технологий
 
 - [Spring Framework](https://spring.io/)

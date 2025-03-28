@@ -7,6 +7,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.unit.DataSize;
 
+/**
+ * Class to set up MultipartConfiguration (MultipartConfigElement).
+ *
+ * @author UsoltsevI
+ */
 @Configuration
 public class MultipartConfig {
     @Value("${multipart.max-file-size:10}")
@@ -15,6 +20,11 @@ public class MultipartConfig {
     @Value("${multipart.max-request-size:20}")
     private int maxRequestSize;
 
+    /**
+     * Get configured MultipartConfigElement.
+     *
+     * @return configured MultipartConfigElement
+     */
     @Bean
     public MultipartConfigElement multipartConfigElement() {
         MultipartConfigFactory factory = new MultipartConfigFactory();
