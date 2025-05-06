@@ -47,11 +47,49 @@ public interface SFileRepository {
     public Page<SFile> findAllByUsername(String username, Pageable pageable);
 
     /**
+     * Find all files belonging to the user by owner username.
+     * Sort by createdAt.
+     *
+     * @param username owner username
+     * @return list of user files
+     */
+    public Page<SFile> findAllByUsernameSortByCreatedAd(String username, Pageable pageable);
+
+    /**
+     * Find all files belonging to the user by owner username.
+     *
+     * @param username owner username
+     * @return list of user files
+     */
+    public Page<SFile> findAllByUsernameSortByFileSize(String username, Pageable pageable);
+
+    /**
      * Find all files.
      *
      * @return list of all files
      */
     public Page<SFile> findAll(Pageable pageable);
+
+    /**
+     * Find all files. Sort by file size.
+     *
+     * @return list of all files
+     */
+    public Page<SFile> findAllSortBySize(Pageable pageable);
+
+    /**
+     * Find all files. Sort by owner id.
+     *
+     * @return list of all files
+     */
+    public Page<SFile> findAllSortByOwnerId(Pageable pageable);
+
+    /**
+     * Find all files. Sort by creation date.
+     *
+     * @return list of all files
+     */
+    public Page<SFile> findAllSortByCreatedAt(Pageable pageable);
 
     /**
      * Delete sFile by ID.

@@ -53,7 +53,6 @@
     </div>
 </nav>
 <!-- Close Header -->
-
     <div class="file_upload">
         <h3>Upload a File to S3</h3>
         <form method="POST" th:action="@{/user/{username}/files/upload(username=${#authentication.name})}"
@@ -64,44 +63,70 @@
     </div>
     <div class="files_list">
         <h1>List of files</h1>
-        <table class="all_files_table">
-            <thead>
-            <tr>
-                <th>Filename</th>
-                <th>Content type</th>
-                <th>File size</th>
-                <th>Created at</th>
-                <th></th>
-                <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="sfile : ${allFiles}">
-                <td th:text="${sfile.filename}"></td>
-                <td th:text="${sfile.contentType}"></td>
-                <td th:text="${sfile.fileSize}"></td>
-                <td th:text="${sfile.createdAt}"></td>
-                <td>
-                    <form method="GET" th:action="@{/user/{username}/files/{fileId}/download(username=${#authentication.name},fileId=${sfile.id})}">
-                        <button type="submit">Download</button>
-                    </form>
-                </td>
-                <td>
-                    <form method="POST" th:action="@{/user/{username}/files/delete(username=${#authentication.name})}">
-                        <input type="hidden" th:name="fileId" th:value="${sfile.id}"/>
-                        <button type="submit">Delete</button>
-                    </form>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+        <a class="sort_button"
+           th:if='${sortOption != "created_at"}'
+           th:href="@{/user/{username}/files(username=${#authentication.name},sort=created_at,page=0)}">
+            Sort By Creation Date
+        </a>
+        <span class="sort_button"
+              th:if='${sortOption == "created_at"}'>
+            Sorted By Creation Date
+        </span>
+        <a class="sort_button"
+           th:if='${sortOption != "file_size"}'
+           th:href="@{/user/{username}/files(username=${#authentication.name},sort=file_size,page=0)}">
+            Sort By File Size
+        </a>
+        <span class="sort_button"
+              th:if='${sortOption == "file_size"}'>
+            Sorted By File Size
+        </span>
+
+        <div>
+            <table class="all_files_table">
+                <thead>
+                <tr>
+                    <th>Filename</th>
+                    <th>Content type</th>
+                    <th>File size</th>
+                    <th>Created at</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="sfile : ${allFiles}">
+                    <td th:text="${sfile.filename}"></td>
+                    <td th:text="${sfile.contentType}"></td>
+                    <td th:text="${sfile.fileSize}"></td>
+                    <td th:text="${sfile.createdAt}"></td>
+                    <td>
+                        <form method="GET" th:action="@{/user/{username}/files/{fileId}/download(username=${#authentication.name},fileId=${sfile.id})}">
+                            <button type="submit">Download</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form method="POST" th:action="@{/user/{username}/files/delete(username=${#authentication.name})}">
+                            <input type="hidden" th:name="fileId" th:value="${sfile.id}"/>
+                            <button type="submit">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <a class="page_button"
+           th:if="${pageNumber > 0}"
+           th:href="@{/user/{username}/files(username=${#authentication.name},page=${pageNumber - 1},sort=${sortOption})}">
+            Prev Page
+        </a>
+        <span class="page_button" th:text="@{{pageNumber}/{totalPages}(pageNumber=${pageNumber + 1},totalPages=${totalPages})}"></span>
+        <a class="page_button"
+           th:if="${pageNumber < totalPages - 1}"
+           th:href="@{/user/{username}/files(username=${#authentication.name},page=${pageNumber + 1},sort=${sortOption})}">
+            Next Page
+        </a>
     </div>
-    <a th:if="${pageNumber > 0}" th:href="@{/user/{username}/files(username=${#authentication.name},page=${pageNumber - 1})}">
-        Prev Page
-    </a>
-    <a th:if="${pageNumber < totalPages - 1}" th:href="@{/user/{username}/files(username=${#authentication.name},page=${pageNumber + 1})}">
-        Next Page
-    </a>
     <!-- Start Footer -->
     <footer class="bg-secondary pt-4">
         <div class="container">

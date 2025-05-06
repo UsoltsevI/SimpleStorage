@@ -45,14 +45,16 @@ public class SUserController {
     public String getFiles(@PathVariable String username
             , Model model
             , HttpSession session
-            , @RequestParam(name = "page", defaultValue = "0") int pageNumber) {
+            , @RequestParam(name = "page", defaultValue = "0") int pageNumber
+            , @RequestParam(name = "sort", defaultValue = "id") String sortOption) {
         int pageSize = 10;
 
-        Page<SFile> userFiles = sFileService.findAllByUsername(username, pageNumber, pageSize);
+        Page<SFile> userFiles = sFileService.findAllByUsername(username, pageNumber, pageSize, sortOption);
 
         model.addAttribute("allFiles", userFiles.toList());
         model.addAttribute("pageNumber", userFiles.getNumber());
         model.addAttribute("totalPages", userFiles.getTotalPages());
+        model.addAttribute("sortOption", sortOption);
 
         return "files";
     }

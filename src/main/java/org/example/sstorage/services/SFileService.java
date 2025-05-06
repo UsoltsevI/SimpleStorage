@@ -10,6 +10,7 @@ import org.example.sstorage.repositories.SUserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -75,8 +76,13 @@ public class SFileService {
      * @param username owner username
      * @return list of user files
      */
-    public Page<SFile> findAllByUsername(String username, int pageNumber, int pageSize) {
-        return sFileRepository.findAllByUsername(username, PageRequest.of(pageNumber, pageSize));
+    public Page<SFile> findAllByUsername(String username, int pageNumber, int pageSize, String sortOption) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        return switch (sortOption) {
+            case "file_size" -> sFileRepository.findAllByUsernameSortByFileSize(username, pageable);
+            case "created_at" -> sFileRepository.findAllByUsernameSortByCreatedAd(username, pageable);
+            default -> sFileRepository.findAllByUsername(username, pageable);
+        };
     }
 
     /**
@@ -84,8 +90,14 @@ public class SFileService {
      *
      * @return list of all files
      */
-    public Page<SFile> getAllFiles(int pageNumber, int pageSize) {
-        return sFileRepository.findAll(PageRequest.of(pageNumber, pageSize));
+    public Page<SFile> getAllFiles(int pageNumber, int pageSize, String sortOption) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        return switch (sortOption) {
+            case "file_size" -> sFileRepository.findAllSortBySize(pageable);
+            case "owner" -> sFileRepository.findAllSortByOwnerId(pageable);
+            case "created_at" -> sFileRepository.findAllSortByCreatedAt(pageable);
+            default -> sFileRepository.findAll(PageRequest.of(pageNumber, pageSize));
+        };
     }
 
     /**

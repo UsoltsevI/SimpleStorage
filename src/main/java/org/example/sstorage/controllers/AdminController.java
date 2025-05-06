@@ -71,14 +71,16 @@ public class AdminController {
     @GetMapping("/allfiles")
     public String getAllFiles(Model model
             , HttpSession session
-            , @RequestParam(name = "page", defaultValue = "0") int pageNumber) {
+            , @RequestParam(name = "page", defaultValue = "0") int pageNumber
+            , @RequestParam(name = "sort", defaultValue = "id") String sortOption) {
         int pageSize = 10;
 
-        Page<SFile> files = sFileService.getAllFiles(pageNumber, pageSize);
+        Page<SFile> files = sFileService.getAllFiles(pageNumber, pageSize, sortOption);
 
         model.addAttribute("allFiles", files);
         model.addAttribute("pageNumber", files.getNumber());
         model.addAttribute("totalPages", files.getTotalPages());
+        model.addAttribute("sortOption", sortOption);
 
         return "allfiles";
     }

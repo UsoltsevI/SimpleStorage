@@ -22,6 +22,27 @@ input[type="password"] {
     margin-bottom: 10px;
 }
 
+.sort_button {
+    padding: 8px;
+    width: fit-content;
+    box-sizing: border-box;
+    height: fit-content;
+    margin-right: 8px;
+    border: 1px solid grey;
+    background-color: lightgrey;
+}
+
+.page_button {
+    padding: 8px;
+    width: fit-content;
+    box-sizing: border-box;
+    height: fit-content;
+    margin-right: 8px;
+    margin-top: 8px;
+    border: 1px solid grey;
+    background-color: lightgrey;
+}
+
 .login_form {
     height: 500px;
     width: 600px;
@@ -61,16 +82,26 @@ input[type="password"] {
 .all_users_table {
     border: 1px solid grey;
     border-spacing: 10px;
+    margin-bottom: 16px;
 }
 
 .all_files_table {
+    margin-top: 16px;
+    margin-bottom: 16px;
     border: 1px solid grey;
     border-spacing: 10px;
+    width: fit-content;
+    height: max-content;
 }
 
 .files_table {
+    margin-top: 16px;
+    margin-bottom: 16px;
     border: 1px solid grey;
     border-spacing: 10px;
+    width: fit-content;
+    height: max-content;
+    margin-bottom: 8px;
 }
 
 .all_users_table tr {

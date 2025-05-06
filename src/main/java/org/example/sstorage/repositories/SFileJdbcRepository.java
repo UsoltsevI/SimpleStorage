@@ -106,8 +106,80 @@ public class SFileJdbcRepository implements SFileRepository {
     }
 
     @Override
+    public Page<SFile> findAllByUsernameSortByCreatedAd(String username, Pageable pageable) {
+        String sql = "SELECT * FROM files WHERE username = ? ORDER BY created_at LIMIT ? OFFSET ?";
+        String countSql = "SELECT COUNT(*) FROM files WHERE username = ?";
+
+        List<SFile> list = jdbcTemplate.query(sql, (rs, rowNum) -> extractSFile(rs)
+                , username
+                , pageable.getPageSize()
+                , pageable.getOffset());
+
+        Long total = jdbcTemplate.queryForObject(countSql, Long.class, username);
+
+        return new PageImpl<>(list, pageable, total == null ? 0L : total);
+    }
+
+    @Override
+    public Page<SFile> findAllByUsernameSortByFileSize(String username, Pageable pageable) {
+        String sql = "SELECT * FROM files WHERE username = ? ORDER BY file_size LIMIT ? OFFSET ?";
+        String countSql = "SELECT COUNT(*) FROM files WHERE username = ?";
+
+        List<SFile> list = jdbcTemplate.query(sql, (rs, rowNum) -> extractSFile(rs)
+                , username
+                , pageable.getPageSize()
+                , pageable.getOffset());
+
+        Long total = jdbcTemplate.queryForObject(countSql, Long.class, username);
+
+        return new PageImpl<>(list, pageable, total == null ? 0L : total);
+    }
+
+    @Override
     public Page<SFile> findAll(Pageable pageable) {
         String sql = "SELECT * FROM files ORDER BY id LIMIT ? OFFSET ?";
+        String countSql = "SELECT COUNT(*) FROM files";
+
+        List<SFile> list = jdbcTemplate.query(sql, (rs, rowNum) -> extractSFile(rs)
+                , pageable.getPageSize()
+                , pageable.getOffset());
+
+        Long total = jdbcTemplate.queryForObject(countSql, Long.class);
+
+        return new PageImpl<>(list, pageable, total == null ? 0L : total);
+    }
+
+    @Override
+    public Page<SFile> findAllSortBySize(Pageable pageable) {
+        String sql = "SELECT * FROM files ORDER BY file_size LIMIT ? OFFSET ?";
+        String countSql = "SELECT COUNT(*) FROM files";
+
+        List<SFile> list = jdbcTemplate.query(sql, (rs, rowNum) -> extractSFile(rs)
+                , pageable.getPageSize()
+                , pageable.getOffset());
+
+        Long total = jdbcTemplate.queryForObject(countSql, Long.class);
+
+        return new PageImpl<>(list, pageable, total == null ? 0L : total);
+    }
+
+    @Override
+    public Page<SFile> findAllSortByOwnerId(Pageable pageable) {
+        String sql = "SELECT * FROM files ORDER BY user_id LIMIT ? OFFSET ?";
+        String countSql = "SELECT COUNT(*) FROM files";
+
+        List<SFile> list = jdbcTemplate.query(sql, (rs, rowNum) -> extractSFile(rs)
+                , pageable.getPageSize()
+                , pageable.getOffset());
+
+        Long total = jdbcTemplate.queryForObject(countSql, Long.class);
+
+        return new PageImpl<>(list, pageable, total == null ? 0L : total);
+    }
+
+    @Override
+    public Page<SFile> findAllSortByCreatedAt(Pageable pageable) {
+        String sql = "SELECT * FROM files ORDER BY created_at LIMIT ? OFFSET ?";
         String countSql = "SELECT COUNT(*) FROM files";
 
         List<SFile> list = jdbcTemplate.query(sql, (rs, rowNum) -> extractSFile(rs)
