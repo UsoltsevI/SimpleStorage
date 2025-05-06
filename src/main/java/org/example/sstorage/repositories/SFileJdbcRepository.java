@@ -3,6 +3,9 @@ package org.example.sstorage.repositories;
 import org.example.sstorage.entities.FileSave;
 import org.example.sstorage.entities.SFile;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -69,24 +72,51 @@ public class SFileJdbcRepository implements SFileRepository {
     }
 
     @Override
-    public List<SFile> findAllByUserId(Long userId) {
-        String sql = "SELECT * FROM files WHERE user_id = ?";
+    public Page<SFile> findAllByUserId(Long userId, Pageable pageable) {
+        String sql = "SELECT * FROM files WHERE user_id = ? ORDER BY id LIMIT ? OFFSET ?";
+        String countSql = "SELECT COUNT(*) FROM files WHERE user_id = ?";
 
-        return jdbcTemplate.query(sql, (rs, rowNum) -> extractSFile(rs), userId);
+        List<SFile> list = jdbcTemplate.query(sql, (rs, rowNum) -> extractSFile(rs)
+                , userId
+                , pageable.getPageSize()
+                , pageable.getOffset());
+
+        Long total = jdbcTemplate.queryForObject(countSql, Long.class, userId);
+
+        if (total == null) {
+            total = 0L;
+        }
+
+        return new PageImpl<>(list, pageable, total);
     }
 
     @Override
-    public List<SFile> findAllByUsername(String username) {
-        String sql = "SELECT * FROM files WHERE username = ?";
+    public Page<SFile> findAllByUsername(String username, Pageable pageable) {
+        String sql = "SELECT * FROM files WHERE username = ? ORDER BY id LIMIT ? OFFSET ?";
+        String countSql = "SELECT COUNT(*) FROM files WHERE username = ?";
 
-        return jdbcTemplate.query(sql, (rs, rowNum) -> extractSFile(rs), username);
+        List<SFile> list = jdbcTemplate.query(sql, (rs, rowNum) -> extractSFile(rs)
+                , username
+                , pageable.getPageSize()
+                , pageable.getOffset());
+
+        Long total = jdbcTemplate.queryForObject(countSql, Long.class, username);
+
+        return new PageImpl<>(list, pageable, total == null ? 0L : total);
     }
 
     @Override
-    public List<SFile> findAll() {
-        String sql = "SELECT * FROM files";
+    public Page<SFile> findAll(Pageable pageable) {
+        String sql = "SELECT * FROM files ORDER BY id LIMIT ? OFFSET ?";
+        String countSql = "SELECT COUNT(*) FROM files";
 
-        return jdbcTemplate.query(sql, (rs, rowNum) -> extractSFile(rs));
+        List<SFile> list = jdbcTemplate.query(sql, (rs, rowNum) -> extractSFile(rs)
+                , pageable.getPageSize()
+                , pageable.getOffset());
+
+        Long total = jdbcTemplate.queryForObject(countSql, Long.class);
+
+        return new PageImpl<>(list, pageable, total == null ? 0L : total);
     }
 
     @Override

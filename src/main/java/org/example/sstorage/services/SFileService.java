@@ -8,11 +8,12 @@ import org.example.sstorage.entities.SUser;
 import org.example.sstorage.repositories.SFileRepository;
 import org.example.sstorage.repositories.SUserRepository;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -54,8 +55,8 @@ public class SFileService {
      *
      * @return list of all files
      */
-    public List<SFile> findAll() {
-        return sFileRepository.findAll();
+    public Page<SFile> findAll(int pageNumber, int pageSize) {
+        return sFileRepository.findAll(PageRequest.of(pageNumber, pageSize));
     }
 
     /**
@@ -64,8 +65,8 @@ public class SFileService {
      * @param userId owner ID
      * @return list of user files
      */
-    public List<SFile> findAllByUserId(Long userId) {
-        return sFileRepository.findAllByUserId(userId);
+    public Page<SFile> findAllByUserId(Long userId, int pageNumber, int pageSize) {
+        return sFileRepository.findAllByUserId(userId, PageRequest.of(pageNumber, pageSize));
     }
 
     /**
@@ -74,8 +75,8 @@ public class SFileService {
      * @param username owner username
      * @return list of user files
      */
-    public List<SFile> findAllByUsername(String username) {
-        return sFileRepository.findAllByUsername(username);
+    public Page<SFile> findAllByUsername(String username, int pageNumber, int pageSize) {
+        return sFileRepository.findAllByUsername(username, PageRequest.of(pageNumber, pageSize));
     }
 
     /**
@@ -83,8 +84,8 @@ public class SFileService {
      *
      * @return list of all files
      */
-    public List<SFile> getAllFiles() {
-        return sFileRepository.findAll();
+    public Page<SFile> getAllFiles(int pageNumber, int pageSize) {
+        return sFileRepository.findAll(PageRequest.of(pageNumber, pageSize));
     }
 
     /**
@@ -218,13 +219,7 @@ public class SFileService {
      * @return true if success
      */
     public boolean deleteAllByUserId(Long userId) {
-        List<SFile> files = sFileRepository.findAllByUserId(userId);
-
-        for (SFile file : files) {
-            deleteFile(file);
-        }
-
-        return true;
+        return sFileRepository.deleteAllByUserId(userId);
     }
 
     /**
@@ -234,13 +229,7 @@ public class SFileService {
      * @return true if success
      */
     private boolean deleteAllByUsername(String username) {
-        List<SFile> files = sFileRepository.findAllByUsername(username);
-
-        for (SFile file : files) {
-            deleteFile(file);
-        }
-
-        return true;
+        return sFileRepository.deleteAllByUsername(username);
     }
 
     /**

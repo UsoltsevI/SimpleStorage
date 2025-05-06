@@ -1,11 +1,17 @@
 package org.example.sstorage.controllers;
 
+import jakarta.servlet.http.HttpSession;
+import org.example.sstorage.entities.SFile;
+import org.example.sstorage.entities.SUser;
 import org.example.sstorage.services.SFileService;
 import org.example.sstorage.services.SUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * The controller of pages accessible only to the administrator.
@@ -27,8 +33,17 @@ public class AdminController {
      * @return view name
      */
     @GetMapping("/allusers")
-    public String getAllUsers(Model model) {
-        model.addAttribute("allUsers", sUserService.getAllUsers());
+    public String getAllUsers(Model model
+            , HttpSession session
+            , @RequestParam(name = "page", defaultValue = "0") int pageNumber) {
+        int pageSize = 10;
+
+        Page<SUser> users = sUserService.getAllUsers(pageNumber, pageSize);
+
+        model.addAttribute("allUsers", users.toList());
+        model.addAttribute("pageNumber", users.getNumber());
+        model.addAttribute("totalPages", users.getTotalPages());
+
 
         return "allusers";
     }
@@ -54,8 +69,16 @@ public class AdminController {
      * @return all files page
      */
     @GetMapping("/allfiles")
-    public String getAllFiles(Model model) {
-        model.addAttribute("allFiles", sFileService.getAllFiles());
+    public String getAllFiles(Model model
+            , HttpSession session
+            , @RequestParam(name = "page", defaultValue = "0") int pageNumber) {
+        int pageSize = 10;
+
+        Page<SFile> files = sFileService.getAllFiles(pageNumber, pageSize);
+
+        model.addAttribute("allFiles", files);
+        model.addAttribute("pageNumber", files.getNumber());
+        model.addAttribute("totalPages", files.getTotalPages());
 
         return "allfiles";
     }

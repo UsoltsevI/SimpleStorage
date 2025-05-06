@@ -2,8 +2,9 @@ package org.example.sstorage.repositories;
 
 import org.example.sstorage.entities.FileSave;
 import org.example.sstorage.entities.SFile;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -35,7 +36,7 @@ public interface SFileRepository {
      * @param userId owner ID
      * @return list of user files
      */
-    public List<SFile> findAllByUserId(Long userId);
+    public Page<SFile> findAllByUserId(Long userId, Pageable pageable);
 
     /**
      * Find all files belonging to the user by owner username.
@@ -43,14 +44,14 @@ public interface SFileRepository {
      * @param username owner username
      * @return list of user files
      */
-    public List<SFile> findAllByUsername(String username);
+    public Page<SFile> findAllByUsername(String username, Pageable pageable);
 
     /**
      * Find all files.
      *
      * @return list of all files
      */
-    public List<SFile> findAll();
+    public Page<SFile> findAll(Pageable pageable);
 
     /**
      * Delete sFile by ID.

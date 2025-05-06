@@ -5,6 +5,8 @@ import org.example.sstorage.entities.SRole;
 import org.example.sstorage.entities.SUser;
 import org.example.sstorage.entities.UserSave;
 import org.example.sstorage.repositories.SUserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -142,7 +144,7 @@ public class SUserService implements UserDetailsService {
      *
      * @return list of found users
      */
-    public List<SUser> getAllUsers() {
-        return sUserRepository.findAll();
+    public Page<SUser> getAllUsers(int pageNumber, int pageSize) {
+        return sUserRepository.findAll(PageRequest.of(pageNumber, pageSize));
     }
 }

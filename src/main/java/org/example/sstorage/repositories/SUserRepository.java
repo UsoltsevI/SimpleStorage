@@ -2,8 +2,9 @@ package org.example.sstorage.repositories;
 
 import org.example.sstorage.entities.SUser;
 import org.example.sstorage.entities.UserSave;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -60,7 +61,7 @@ public interface SUserRepository {
      *
      * @return list of found users
      */
-    public List<SUser> findAll();
+    public Page<SUser> findAll(Pageable pageable);
 
     /**
      * Delete user by its ID.

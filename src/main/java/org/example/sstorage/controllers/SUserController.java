@@ -1,5 +1,6 @@
 package org.example.sstorage.controllers;
 
+import jakarta.servlet.http.HttpSession;
 import org.example.sstorage.entities.SFile;
 import org.example.sstorage.services.SFileService;
 import org.example.sstorage.services.SUserService;
@@ -7,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.data.domain.Page;
 import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -14,7 +16,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -41,10 +42,17 @@ public class SUserController {
      */
     @GetMapping("/{username}/files")
     @PreAuthorize("#username == authentication.name")
-    public String getFiles(@PathVariable String username, Model model) {
-        List<SFile> userFiles = sFileService.findAllByUsername(username);
+    public String getFiles(@PathVariable String username
+            , Model model
+            , HttpSession session
+            , @RequestParam(name = "page", defaultValue = "0") int pageNumber) {
+        int pageSize = 10;
 
-        model.addAttribute("allFiles", userFiles);
+        Page<SFile> userFiles = sFileService.findAllByUsername(username, pageNumber, pageSize);
+
+        model.addAttribute("allFiles", userFiles.toList());
+        model.addAttribute("pageNumber", userFiles.getNumber());
+        model.addAttribute("totalPages", userFiles.getTotalPages());
 
         return "files";
     }

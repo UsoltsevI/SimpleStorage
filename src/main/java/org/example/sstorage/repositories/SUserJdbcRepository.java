@@ -4,6 +4,9 @@ import org.example.sstorage.entities.SRole;
 import org.example.sstorage.entities.SUser;
 import org.example.sstorage.entities.UserSave;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -91,15 +94,21 @@ public class SUserJdbcRepository implements SUserRepository {
     }
 
     @Override
-    public List<SUser> findAll() {
-        String sql = "SELECT id, username, role, created_at FROM users";
+    public Page<SUser> findAll(Pageable pageable) {
+        String sql = "SELECT id, username, role, created_at FROM users ORDER BY id LIMIT ? OFFSET ?";
+        String countSql = "SELECT COUNT(*) FROM users";
 
-        return jdbcTemplate.query(sql, (rs, rowNum) -> SUser.builder()
+        List<SUser> list = jdbcTemplate.query(sql, (rs, rowNum) -> SUser.builder()
                 .id(rs.getLong("id"))
                 .username(rs.getString("username"))
                 .role(SRole.fromString(rs.getString("role")))
                 .createdAt(rs.getTimestamp("created_at").toInstant())
-                .build());
+                .build()
+                , pageable.getPageSize()
+                , pageable.getOffset());
+        Long total = jdbcTemplate.queryForObject(countSql, Long.class);
+
+        return new PageImpl<>(list, pageable, total == null ? 0L : total);
     }
 
     @Override

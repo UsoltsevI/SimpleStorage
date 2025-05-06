@@ -84,6 +84,12 @@
             </tbody>
         </table>
     </div>
+    <a th:if="${pageNumber > 0}" th:href="@{/admin/allusers(page=${pageNumber - 1})}">
+        Prev Page
+    </a>
+    <a th:if="${pageNumber < totalPages - 1}" th:href="@{/admin/allusers(page=${pageNumber + 1})}">
+        Next Page
+    </a>
 </div>
 <!-- Start Footer -->
 <footer class="bg-secondary pt-4">

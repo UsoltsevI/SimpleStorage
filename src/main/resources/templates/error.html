@@ -12,6 +12,10 @@
     <div th:if="${error}" class="error" th:text="${error}"></div>
 </div>
 
+<div sec:authorize="hasRole('ROLE_ADMIN')" >
+    <div th:if="${stackTrace}" th:text="${stackTrace}" />
+</div>
+
 <div sec:authorize="isAnonymous()">
     <p>Please <a href="/login">login</a> or <a href="/register">register</a>.</p>
 </div>
