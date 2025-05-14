@@ -136,6 +136,27 @@ public class SFileJdbcRepository implements SFileRepository {
     }
 
     @Override
+    public Page<SFile> findAllByUsernameAndFilename(String username, String filename, Pageable pageable, String sortOption) {
+        String sql = switch (sortOption) {
+            case "file_size" -> "SELECT * FROM files WHERE username = ? AND filename = ? ORDER BY file_size LIMIT ? OFFSET ?";
+            case "created_at" -> "SELECT * FROM files WHERE username = ? AND filename = ? ORDER BY created_at LIMIT ? OFFSET ?";
+            default -> "SELECT * FROM files WHERE username = ? AND filename = ? ORDER BY id LIMIT ? OFFSET ?";
+        };
+
+        String countSql = "SELECT COUNT(*) FROM files WHERE username = ? AND filename = ?";
+
+        List<SFile> list = jdbcTemplate.query(sql, (rs, rowNum) -> extractSFile(rs)
+            , username
+            , filename
+            , pageable.getPageSize()
+            , pageable.getOffset());
+
+        Long total = jdbcTemplate.queryForObject(countSql, Long.class, username, filename);
+
+        return new PageImpl<>(list, pageable, total == null ? 0L : total);
+    }
+
+    @Override
     public Page<SFile> findAll(Pageable pageable) {
         String sql = "SELECT * FROM files ORDER BY id LIMIT ? OFFSET ?";
         String countSql = "SELECT COUNT(*) FROM files";

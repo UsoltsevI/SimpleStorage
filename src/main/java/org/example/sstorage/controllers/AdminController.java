@@ -72,15 +72,21 @@ public class AdminController {
     public String getAllFiles(Model model
             , HttpSession session
             , @RequestParam(name = "page", defaultValue = "0") int pageNumber
-            , @RequestParam(name = "sort", defaultValue = "id") String sortOption) {
+            , @RequestParam(name = "sort", defaultValue = "id") String sortOption
+            , @RequestParam(name = "searchUsername", defaultValue = "") String searchUsername
+            , @RequestParam(name = "searchFilename", defaultValue = "") String searchFilename) {
         int pageSize = 10;
 
-        Page<SFile> files = sFileService.getAllFiles(pageNumber, pageSize, sortOption);
+        Page<SFile> files = "".equals(searchUsername) || "".equals(searchFilename)
+            ? sFileService.getAllFiles(pageNumber, pageSize, sortOption)
+            : sFileService.findAllByUsernameAndFilename(searchUsername, searchFilename, pageNumber, pageSize, sortOption);
 
         model.addAttribute("allFiles", files);
         model.addAttribute("pageNumber", files.getNumber());
         model.addAttribute("totalPages", files.getTotalPages());
         model.addAttribute("sortOption", sortOption);
+        model.addAttribute("searchFilename", searchFilename);
+        model.addAttribute("searchUsername", searchUsername);
 
         return "allfiles";
     }

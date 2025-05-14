@@ -86,6 +86,18 @@ public class SFileService {
     }
 
     /**
+     * Find all files belonging to the user by owner username.
+     * Filter by filename.
+     *
+     * @param username owner username
+     * @return list of user files
+     */
+    public Page<SFile> findAllByUsernameAndFilename(String username, String filename, int pageNumber, int pageSize, String sortOption) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        return sFileRepository.findAllByUsernameAndFilename(username, filename, pageable, sortOption);
+    }
+
+    /**
      * Get all sFiles.
      *
      * @return list of all files

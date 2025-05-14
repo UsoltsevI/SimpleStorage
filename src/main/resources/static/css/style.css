@@ -43,6 +43,17 @@ input[type="password"] {
     background-color: lightgrey;
 }
 
+.find_button {
+    padding: 8px;
+    width: fit-content;
+    box-sizing: border-box;
+    height: fit-content;
+    margin-right: 8px;
+    margin-bottom: 8px;
+    border: 1px solid grey;
+    background-color: lightgrey;
+}
+
 .login_form {
     height: 500px;
     width: 600px;

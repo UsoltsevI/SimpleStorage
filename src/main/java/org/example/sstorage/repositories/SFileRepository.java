@@ -64,6 +64,15 @@ public interface SFileRepository {
     public Page<SFile> findAllByUsernameSortByFileSize(String username, Pageable pageable);
 
     /**
+     * Find all files belonging to the user by owner username.
+     * Filter by filename.
+     *
+     * @param username owner username
+     * @return list of user files
+     */
+    public Page<SFile> findAllByUsernameAndFilename(String username, String filename, Pageable pageable, String sortOption);
+
+    /**
      * Find all files.
      *
      * @return list of all files

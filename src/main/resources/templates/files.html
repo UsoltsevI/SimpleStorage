@@ -63,6 +63,10 @@
     </div>
     <div class="files_list">
         <h1>List of files</h1>
+        <form method="GET" th:action="@{/user/{username}/files(username=${#authentication.name},sort=${sortOption},page=0)}">
+            <input type="text" name="searchFilename" placeholder="filename"/>
+            <button type="submit" class="find_button">Find</button><br>
+        </form>
         <a class="sort_button"
            th:if='${sortOption != "created_at"}'
            th:href="@{/user/{username}/files(username=${#authentication.name},sort=created_at,page=0)}">
@@ -117,13 +121,13 @@
         </div>
         <a class="page_button"
            th:if="${pageNumber > 0}"
-           th:href="@{/user/{username}/files(username=${#authentication.name},page=${pageNumber - 1},sort=${sortOption})}">
+           th:href="@{/user/{username}/files(username=${#authentication.name},page=${pageNumber - 1},sort=${sortOption},searchFilename=${searchFilename})}">
             Prev Page
         </a>
         <span class="page_button" th:text="@{{pageNumber}/{totalPages}(pageNumber=${pageNumber + 1},totalPages=${totalPages})}"></span>
         <a class="page_button"
            th:if="${pageNumber < totalPages - 1}"
-           th:href="@{/user/{username}/files(username=${#authentication.name},page=${pageNumber + 1},sort=${sortOption})}">
+           th:href="@{/user/{username}/files(username=${#authentication.name},page=${pageNumber + 1},sort=${sortOption},searchFilename=${searchFilename})}">
             Next Page
         </a>
     </div>
