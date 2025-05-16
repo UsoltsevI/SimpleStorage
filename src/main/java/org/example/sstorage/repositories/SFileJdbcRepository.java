@@ -138,20 +138,21 @@ public class SFileJdbcRepository implements SFileRepository {
     @Override
     public Page<SFile> findAllByUsernameAndFilename(String username, String filename, Pageable pageable, String sortOption) {
         String sql = switch (sortOption) {
-            case "file_size" -> "SELECT * FROM files WHERE username = ? AND filename = ? ORDER BY file_size LIMIT ? OFFSET ?";
-            case "created_at" -> "SELECT * FROM files WHERE username = ? AND filename = ? ORDER BY created_at LIMIT ? OFFSET ?";
-            default -> "SELECT * FROM files WHERE username = ? AND filename = ? ORDER BY id LIMIT ? OFFSET ?";
+            case "file_size" -> "SELECT * FROM files WHERE username = ? AND filename LIKE ? ORDER BY file_size LIMIT ? OFFSET ?";
+            case "created_at" -> "SELECT * FROM files WHERE username = ? AND filename LIKE ? ORDER BY created_at LIMIT ? OFFSET ?";
+            default -> "SELECT * FROM files WHERE username = ? AND filename LIKE ? ORDER BY id LIMIT ? OFFSET ?";
         };
 
-        String countSql = "SELECT COUNT(*) FROM files WHERE username = ? AND filename = ?";
+        String countSql = "SELECT COUNT(*) FROM files WHERE username = ? AND filename LIKE ?";
+        String filenamePrefix = filename + "%";
 
         List<SFile> list = jdbcTemplate.query(sql, (rs, rowNum) -> extractSFile(rs)
             , username
-            , filename
+            , filenamePrefix
             , pageable.getPageSize()
             , pageable.getOffset());
 
-        Long total = jdbcTemplate.queryForObject(countSql, Long.class, username, filename);
+        Long total = jdbcTemplate.queryForObject(countSql, Long.class, username, filenamePrefix);
 
         return new PageImpl<>(list, pageable, total == null ? 0L : total);
     }

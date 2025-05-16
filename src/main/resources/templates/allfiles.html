@@ -64,7 +64,7 @@
     </form>
     <a class="sort_button"
        th:if='${sortOption != "created_at"}'
-       th:href="@{/admin/allfiles(sort=created_at,page=0)}">
+       th:href="@{/admin/allfiles(sort=created_at,page=0,searchFilename=${searchFilename},searchUsername=${searchUsername})}">
         Sort By Creation Date
     </a>
     <span class="sort_button"
@@ -73,7 +73,7 @@
     </span>
     <a class="sort_button"
        th:if='${sortOption != "file_size"}'
-       th:href="@{/admin/allfiles(sort=file_size,page=0)}">
+       th:href="@{/admin/allfiles(sort=file_size,page=0,searchFilename=${searchFilename},searchUsername=${searchUsername})}">
         Sort By File Size
     </a>
     <span class="sort_button"
@@ -82,7 +82,7 @@
     </span>
     <a class="sort_button"
        th:if='${sortOption != "owner"}'
-       th:href="@{/admin/allfiles(sort=owner,page=0)}">
+       th:href="@{/admin/allfiles(sort=owner,page=0,searchFilename=${searchFilename},searchUsername=${searchUsername})}">
         Sort By Owner ID
     </a>
     <span class="sort_button"

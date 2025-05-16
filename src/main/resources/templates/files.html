@@ -69,7 +69,7 @@
         </form>
         <a class="sort_button"
            th:if='${sortOption != "created_at"}'
-           th:href="@{/user/{username}/files(username=${#authentication.name},sort=created_at,page=0)}">
+           th:href="@{/user/{username}/files(username=${#authentication.name},sort=created_at,page=0,searchFilename=${searchFilename})}">
             Sort By Creation Date
         </a>
         <span class="sort_button"
@@ -78,7 +78,7 @@
         </span>
         <a class="sort_button"
            th:if='${sortOption != "file_size"}'
-           th:href="@{/user/{username}/files(username=${#authentication.name},sort=file_size,page=0)}">
+           th:href="@{/user/{username}/files(username=${#authentication.name},sort=file_size,page=0,searchFilename=${searchFilename})}">
             Sort By File Size
         </a>
         <span class="sort_button"
