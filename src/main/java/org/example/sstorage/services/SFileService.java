@@ -57,7 +57,7 @@ public class SFileService {
      * @return list of all files
      */
     public Page<SFile> findAll(int pageNumber, int pageSize) {
-        return sFileRepository.findAll(PageRequest.of(pageNumber, pageSize));
+        return sFileRepository.findAll(PageRequest.of(pageNumber, pageSize), "id");
     }
 
     /**
@@ -78,11 +78,7 @@ public class SFileService {
      */
     public Page<SFile> findAllByUsername(String username, int pageNumber, int pageSize, String sortOption) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        return switch (sortOption) {
-            case "file_size" -> sFileRepository.findAllByUsernameSortByFileSize(username, pageable);
-            case "created_at" -> sFileRepository.findAllByUsernameSortByCreatedAd(username, pageable);
-            default -> sFileRepository.findAllByUsername(username, pageable);
-        };
+        return sFileRepository.findAllByUsername(username, pageable, sortOption);
     }
 
     /**
@@ -103,13 +99,7 @@ public class SFileService {
      * @return list of all files
      */
     public Page<SFile> getAllFiles(int pageNumber, int pageSize, String sortOption) {
-        Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        return switch (sortOption) {
-            case "file_size" -> sFileRepository.findAllSortBySize(pageable);
-            case "owner" -> sFileRepository.findAllSortByOwnerId(pageable);
-            case "created_at" -> sFileRepository.findAllSortByCreatedAt(pageable);
-            default -> sFileRepository.findAll(PageRequest.of(pageNumber, pageSize));
-        };
+        return sFileRepository.findAll(PageRequest.of(pageNumber, pageSize), sortOption);
     }
 
     /**
